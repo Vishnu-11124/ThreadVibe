@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, LucideLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,12 +32,12 @@ export default function Navbar() {
             >
               Home
             </a>
-            <a 
-              href="/shop" 
+            <Link 
+              to="/shop" 
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
             >
               Shop
-            </a>
+            </Link>
             <a 
               href="/about" 
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
