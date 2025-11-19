@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route } from 'react-rout
 import MainLayout from '../layout/MainLayout'
 import HomePage from '../pages/home/HomePage'
 import { Divide } from 'lucide-react'
+import CategoryPage from '../pages/category/CategoryPage'
 
 
 
@@ -9,7 +10,7 @@ import { Divide } from 'lucide-react'
     createRoutesFromElements(
         <Route path="/" element={<MainLayout/>}>
            <Route index element={<HomePage/>}/>
-           <Route path="/categories/:categoryName" element={<h1>Hello</h1>}/>
+           <Route path="/categories/:categoryName" element={<CategoryPage/>}/>
            
         </Route>
     )
