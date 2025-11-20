@@ -26,12 +26,12 @@ export default function Navbar() {
 
           {/* Center/Right - Navigation Links (Desktop) */}
           <div className="hidden md:flex items-center space-x-8">
-            <a 
-              href="/" 
+            <Link 
+              to="/" 
               className="text-gray-700 hover:text-cyan-600 font-medium transition-colors duration-200"
             >
               Home
-            </a>
+            </Link>
             <Link 
               to="/shop" 
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
@@ -82,18 +82,18 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 pt-2 pb-4 space-y-2">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="block px-3 py-2 rounded-md text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 font-medium transition-colors duration-200"
             >
               Home
-            </a>
-            <a
-              href="/shop"
+            </Link>
+            <Link
+              to="/shop"
               className="block px-3 py-2 rounded-md text-gray-700 hover:bg-purple-50 hover:text-purple-600 font-medium transition-colors duration-200"
             >
               Shop
-            </a>
+            </Link>
             <a
               href="/about"
               className="block px-3 py-2 rounded-md text-gray-700 hover:bg-purple-50 hover:text-purple-600 font-medium transition-colors duration-200"

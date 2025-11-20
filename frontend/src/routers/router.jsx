@@ -3,6 +3,7 @@ import MainLayout from '../layout/MainLayout'
 import HomePage from '../pages/home/HomePage'
 import { Divide } from 'lucide-react'
 import CategoryPage from '../pages/category/CategoryPage'
+import ShopPage from '../pages/shop/ShopPage'
 
 
 
@@ -11,6 +12,7 @@ import CategoryPage from '../pages/category/CategoryPage'
         <Route path="/" element={<MainLayout/>}>
            <Route index element={<HomePage/>}/>
            <Route path="/categories/:categoryName" element={<CategoryPage/>}/>
+           <Route path="/shop" element={<ShopPage/>} />
            
         </Route>
     )
