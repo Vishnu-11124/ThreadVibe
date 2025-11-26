@@ -5,6 +5,8 @@ import { Divide } from 'lucide-react'
 import CategoryPage from '../pages/category/CategoryPage'
 import ShopPage from '../pages/shop/ShopPage'
 import SingleProduct from '../pages/shop/product/SingleProduct'
+import Login from '../components/Login'
+import Register from '../components/Register'
 
 
 
@@ -14,9 +16,11 @@ import SingleProduct from '../pages/shop/product/SingleProduct'
            <Route index element={<HomePage/>}/>
            <Route path="/categories/:categoryName" element={<CategoryPage/>}/>
            <Route path="/shop" element={<ShopPage/>} />
-           <Route path="/shop/:id" element={<SingleProduct/>} />
-           
+           <Route path="/shop/:id" element={<SingleProduct/>} />  
+           <Route path="/login" element={<Login/>}/> 
+           <Route path='/register' element={<Register/>}/>
         </Route>
+        
     )
 )
 
