@@ -10,6 +10,7 @@ import Register from '../components/Register'
 
 
 
+
  const route = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<MainLayout/>}>
@@ -19,6 +20,7 @@ import Register from '../components/Register'
            <Route path="/shop/:id" element={<SingleProduct/>} />  
            <Route path="/login" element={<Login/>}/> 
            <Route path='/register' element={<Register/>}/>
+        
         </Route>
         
     )

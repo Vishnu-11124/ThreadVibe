@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, LucideLink } from 'lucide-react';
+import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import CartModel from '../pages/shop/CartModel';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const products = useSelector((state) => state.cart.products)
+  
+  const cartCount = products.length
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  }
+
+  const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen);
+  }
+
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
@@ -26,43 +38,90 @@ export default function Navbar() {
 
           {/* Center/Right - Navigation Links (Desktop) */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-gray-700 hover:text-cyan-600 font-medium transition-colors duration-200"
             >
               Home
             </Link>
-            <Link 
-              to="/shop" 
+            <Link
+              to="/shop"
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
             >
               Shop
             </Link>
-            <a 
-              href="/about" 
+            <a
+              href="/about"
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
             >
               About
             </a>
-            <a 
-              href="/contact" 
+            <a
+              href="/contact"
               className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
             >
               Contact
             </a>
 
+            {/* Cart Icon with Badge */}
+            {/* <Link 
+              to="/cart" 
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:shadow-lg transition-all duration-200 hover:scale-110"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link> */}
+
+            <button
+              onClick={toggleCart}
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:shadow-lg transition-all duration-200 hover:scale-110"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
 
             {/* Login/Profile Icon */}
-            <a 
-              href="/login" 
+            <a
+              href="/login"
               className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-cyan-500 text-white hover:shadow-lg transition-all duration-200 hover:scale-110"
             >
               <User className="w-5 h-5" />
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button & Cart */}
           <div className="md:hidden flex items-center gap-4">
+            {/* Mobile Cart Icon */}
+            {/* <Link
+              to="/cart"
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:shadow-lg transition-all duration-200"
+            >
+              <ShoppingCart className="w-5 md:h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link> */}
+             <button
+              onClick={toggleCart}
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:shadow-lg transition-all duration-200 hover:scale-110"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
 
             <button
               onClick={toggleMenu}
@@ -77,6 +136,16 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {isCartOpen && (
+        
+          <CartModel
+            products={products}
+            isOpen={isCartOpen}
+            onClose={handleCartToggle}
+          />
+        
+      )}
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -106,8 +175,20 @@ export default function Navbar() {
             >
               Contact
             </a>
+            <button
+              onClick={toggleCart}
+              className="relative flex items-center gap-3 px-3 py-2 w-full rounded-md bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-medium hover:shadow-lg transition-all duration-200"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <span className="absolute right-3 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
             <a
-              href="/dashboard"
+              href="/login"
               className="flex items-center gap-3 px-3 py-2 rounded-md bg-gradient-to-r from-green-500 via-blue-500 to-cyan-500 text-white font-medium hover:shadow-lg transition-all duration-200"
             >
               <User className="w-5 h-5" />

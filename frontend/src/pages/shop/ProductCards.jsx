@@ -1,17 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../../redux/features/cart/cartSlice'
+import { ShoppingCart } from 'lucide-react'
 
 const ProductCards = ({products}) => {
+
+  const dispatch = useDispatch()
+
+  const handleAddToCart = (product) => { // Prevent Link navigation when clicking the button
+    dispatch(addToCart(product))
+  }
     
   return (
     <div className="w-full px-4 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {
             products.map((product) => (
-                <div key={product.id} className="group">
+                <div key={product._id} className="group">
                     <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden">
-                        <Link to={`/shop/${product.id}`}>
+                        <Link to={`/shop/${product._id}`}>
                         <div className="relative overflow-hidden bg-gray-50">
                             <img  
                               src={product.images} 
@@ -32,12 +40,26 @@ const ProductCards = ({products}) => {
                                   {product.type}
                                 </h2>
                             </div>
-                            <p className="text-base text-gray-700 font-medium">
+                            <p className="text-base text-gray-700 font-medium mb-4">
                               Price: <b className="text-2xl font-bold text-violet-700">${product.price}</b> 
                               <strike className="text-sm text-gray-400 ml-2">${product.oldPrice}</strike>
                             </p>
                         </div>
                         </Link>
+                        
+                        {/* Add to Cart Button - Outside Link */}
+                        <div className="px-5 pb-5">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleAddToCart(product)
+                            }}
+                            className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                            Add to Cart
+                          </button>
+                        </div>
                     </div>
                 </div>    
             ))

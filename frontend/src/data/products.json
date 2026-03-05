@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "_id": 1,
     "name": "Oversized Graphic Tee",
     "brand": "UrbanWear",
     "category": "men",
@@ -14,7 +14,7 @@
     "images": ["https://dummyimage.com/400x500/000/fff&text=Oversized+Black+Tee"]
   },
   {
-    "id": 2,
+    "_id": 2,
     "name": "Printed Casual Tee",
     "brand": "StreetFit",
     "category": "women",
@@ -28,10 +28,10 @@
     "images": ["https://dummyimage.com/400x500/fff/000&text=Women+Printed+Tee"]
   },
   {
-    "id": 3,
-    "name": "Kids Cartoon T-Shirt",
-    "brand": "KidZone",
-    "category": "kids",
+    "_id": 3,
+    "name": "K_ids Cartoon T-Shirt",
+    "brand": "K_idZone",
+    "category": "k_ids",
     "type": "printed",
     "price": 399,
     "oldPrice": 699,
@@ -39,10 +39,10 @@
     "colors": [{ "name": "Yellow", "hex": "#FFD700" }],
     "ratings": 4.6,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/ffd700/000&text=Kids+Cartoon+Tee"]
+    "images": ["https://dummyimage.com/400x500/ffd700/000&text=K_ids+Cartoon+Tee"]
   },
   {
-    "id": 4,
+    "_id": 4,
     "name": "Classic Hoodie",
     "brand": "UrbanWear",
     "category": "men",
@@ -56,7 +56,7 @@
     "images": ["https://dummyimage.com/400x500/1b2a49/fff&text=Men+Hoodie"]
   },
   {
-    "id": 5,
+    "_id": 5,
     "name": "Women Crop Top",
     "brand": "FashionEra",
     "category": "women",
@@ -70,7 +70,7 @@
     "images": ["https://dummyimage.com/400x500/ffc0cb/000&text=Crop+Top"]
   },
   {
-    "id": 6,
+    "_id": 6,
     "name": "Men Polo T-Shirt",
     "brand": "StylePro",
     "category": "men",
@@ -84,10 +84,10 @@
     "images": ["https://dummyimage.com/400x500/800000/fff&text=Polo+Men"]
   },
   {
-    "id": 7,
-    "name": "Kids Full Sleeve Tee",
-    "brand": "KidZone",
-    "category": "kids",
+    "_id": 7,
+    "name": "K_ids Full Sleeve Tee",
+    "brand": "K_idZone",
+    "category": "k_ids",
     "type": "full-sleeve",
     "price": 449,
     "oldPrice": 699,
@@ -95,10 +95,10 @@
     "colors": [{ "name": "Sky Blue", "hex": "#87CEEB" }],
     "ratings": 4.5,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/87ceeb/000&text=Kids+Full+Sleeve"]
+    "images": ["https://dummyimage.com/400x500/87ceeb/000&text=K_ids+Full+Sleeve"]
   },
   {
-    "id": 8,
+    "_id": 8,
     "name": "Women Oversize Tee",
     "brand": "StreetFit",
     "category": "women",
@@ -112,7 +112,7 @@
     "images": ["https://dummyimage.com/400x500/a9a9a9/000&text=Women+Oversize"]
   },
   {
-    "id": 9,
+    "_id": 9,
     "name": "Men Printed Tee",
     "brand": "UrbanWear",
     "category": "men",
@@ -126,10 +126,10 @@
     "images": ["https://dummyimage.com/400x500/ff0000/fff&text=Printed+Tee"]
   },
   {
-    "id": 10,
-    "name": "Kids Hoodie",
-    "brand": "KidZone",
-    "category": "kids",
+    "_id": 10,
+    "name": "K_ids Hoodie",
+    "brand": "K_idZone",
+    "category": "k_ids",
     "type": "hoodie",
     "price": 899,
     "oldPrice": 1299,
@@ -137,11 +137,11 @@
     "colors": [{ "name": "Green", "hex": "#228B22" }],
     "ratings": 4.7,
     "inStock": false,
-    "images": ["https://dummyimage.com/400x500/228b22/fff&text=Kids+Hoodie"]
+    "images": ["https://dummyimage.com/400x500/228b22/fff&text=K_ids+Hoodie"]
   },
 
   {
-    "id": 11,
+    "_id": 11,
     "name": "Men Sweatshirt",
     "brand": "UrbanWear",
     "category": "men",
@@ -155,7 +155,7 @@
     "images": ["https://dummyimage.com/400x500/8b4513/fff&text=Sweatshirt"]
   },
   {
-    "id": 12,
+    "_id": 12,
     "name": "Women Floral Tee",
     "category": "women",
     "brand": "FashionEra",
@@ -169,10 +169,10 @@
     "images": ["https://dummyimage.com/400x500/ffffff/000&text=Floral+Tee"]
   },
   {
-    "id": 13,
-    "name": "Kids Sports Tee",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 13,
+    "name": "K_ids Sports Tee",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "sports",
     "price": 499,
     "oldPrice": 799,
@@ -180,10 +180,10 @@
     "colors": [{ "name": "Orange", "hex": "#FFA500" }],
     "ratings": 4.3,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/ffa500/000&text=Kids+Sports"]
+    "images": ["https://dummyimage.com/400x500/ffa500/000&text=K_ids+Sports"]
   },
   {
-    "id": 14,
+    "_id": 14,
     "name": "Unisex Oversize Tee",
     "category": "men",
     "brand": "StreetFit",
@@ -197,7 +197,7 @@
     "images": ["https://dummyimage.com/400x500/f5f5dc/000&text=Oversize+Beige"]
   },
   {
-    "id": 15,
+    "_id": 15,
     "name": "Women Hoodie",
     "category": "women",
     "brand": "FashionEra",
@@ -212,10 +212,10 @@
   },
 
   {
-    "id": 16,
-    "name": "Kids Polo Tee",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 16,
+    "name": "K_ids Polo Tee",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "polo",
     "price": 449,
     "oldPrice": 699,
@@ -223,10 +223,10 @@
     "colors": [{ "name": "Blue", "hex": "#0000FF" }],
     "ratings": 4.3,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/0000ff/fff&text=Kids+Polo"]
+    "images": ["https://dummyimage.com/400x500/0000ff/fff&text=K_ids+Polo"]
   },
   {
-    "id": 17,
+    "_id": 17,
     "name": "Men Basic Tee",
     "category": "men",
     "brand": "UrbanWear",
@@ -240,7 +240,7 @@
     "images": ["https://dummyimage.com/400x500/36454f/fff&text=Basic+Tee"]
   },
   {
-    "id": 18,
+    "_id": 18,
     "name": "Women Long Sleeve Tee",
     "category": "women",
     "brand": "FashionEra",
@@ -254,10 +254,10 @@
     "images": ["https://dummyimage.com/400x500/e6e6fa/000&text=Long+Sleeve"]
   },
   {
-    "id": 19,
-    "name": "Kids Oversize Tee",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 19,
+    "name": "K_ids Oversize Tee",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "oversize",
     "price": 399,
     "oldPrice": 699,
@@ -265,10 +265,10 @@
     "colors": [{ "name": "Mint", "hex": "#98FF98" }],
     "ratings": 4.6,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/98ff98/000&text=Kids+Oversize"]
+    "images": ["https://dummyimage.com/400x500/98ff98/000&text=K_ids+Oversize"]
   },
   {
-    "id": 20,
+    "_id": 20,
     "name": "Men Printed Anime Tee",
     "category": "men",
     "brand": "StreetFit",
@@ -283,7 +283,7 @@
   },
 
   {
-    "id": 21,
+    "_id": 21,
     "name": "Women Polo Tee",
     "category": "women",
     "brand": "StylePro",
@@ -297,10 +297,10 @@
     "images": ["https://dummyimage.com/400x500/008080/fff&text=Women+Polo"]
   },
   {
-    "id": 22,
-    "name": "Kids Sports Jersey",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 22,
+    "name": "K_ids Sports Jersey",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "sports",
     "price": 599,
     "oldPrice": 899,
@@ -308,10 +308,10 @@
     "colors": [{ "name": "Black", "hex": "#000000" }],
     "ratings": 4.5,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/000/fff&text=Kids+Sports"]
+    "images": ["https://dummyimage.com/400x500/000/fff&text=K_ids+Sports"]
   },
   {
-    "id": 23,
+    "_id": 23,
     "name": "Men Full Sleeve Tee",
     "category": "men",
     "brand": "UrbanWear",
@@ -325,7 +325,7 @@
     "images": ["https://dummyimage.com/400x500/808000/fff&text=Full+Sleeve"]
   },
   {
-    "id": 24,
+    "_id": 24,
     "name": "Women Sweatshirt",
     "category": "women",
     "brand": "FashionEra",
@@ -339,10 +339,10 @@
     "images": ["https://dummyimage.com/400x500/f5f5dc/000&text=Women+Sweatshirt"]
   },
   {
-    "id": 25,
-    "name": "Kids Printed Tee",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 25,
+    "name": "K_ids Printed Tee",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "printed",
     "price": 349,
     "oldPrice": 599,
@@ -350,11 +350,11 @@
     "colors": [{ "name": "Red", "hex": "#FF0000" }],
     "ratings": 4.4,
     "inStock": true,
-    "images": ["https://dummyimage.com/400x500/ff0000/fff&text=Kids+Printed"]
+    "images": ["https://dummyimage.com/400x500/ff0000/fff&text=K_ids+Printed"]
   },
 
   {
-    "id": 26,
+    "_id": 26,
     "name": "Men Gym Dry-Fit Tee",
     "category": "men",
     "brand": "SportPro",
@@ -368,7 +368,7 @@
     "images": ["https://dummyimage.com/400x500/1e90ff/fff&text=Sports+Tee"]
   },
   {
-    "id": 27,
+    "_id": 27,
     "name": "Women Printed Oversize Tee",
     "category": "women",
     "brand": "StreetFit",
@@ -382,10 +382,10 @@
     "images": ["https://dummyimage.com/400x500/32cd32/000&text=Oversize+Women"]
   },
   {
-    "id": 28,
-    "name": "Kids Hoodie Printed",
-    "category": "kids",
-    "brand": "KidZone",
+    "_id": 28,
+    "name": "K_ids Hoodie Printed",
+    "category": "k_ids",
+    "brand": "K_idZone",
     "type": "hoodie",
     "price": 799,
     "oldPrice": 1199,
@@ -393,10 +393,10 @@
     "colors": [{ "name": "Navy", "hex": "#000080" }],
     "ratings": 4.7,
     "inStock": false,
-    "images": ["https://dummyimage.com/400x500/000080/fff&text=Kids+Hoodie"]
+    "images": ["https://dummyimage.com/400x500/000080/fff&text=K_ids+Hoodie"]
   },
   {
-    "id": 29,
+    "_id": 29,
     "name": "Men Luxury Polo",
     "category": "men",
     "brand": "StylePro",
@@ -410,7 +410,7 @@
     "images": ["https://dummyimage.com/400x500/ffffff/000&text=Luxury+Polo"]
   },
   {
-    "id": 30,
+    "_id": 30,
     "name": "Women Casual Tee",
     "category": "women",
     "brand": "FashionEra",
