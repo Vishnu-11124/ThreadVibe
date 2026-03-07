@@ -2,7 +2,7 @@ import React from 'react'
 import { Trash2, ShoppingBag, Tag, Receipt, ChevronRight } from 'lucide-react'
 import { useSelector, useDispatch } from 'react-redux'
 // import { clearCart } from '../../redux/cartSlice' // adjust path to your slice
-
+import { clearCart } from '../../redux/features/cart/cartSlice' // adjust path to your slice
 const OrderSummary = () => {
   const dispatch = useDispatch()
   const { tax, taxRate, totalPrice, grandTotal, selectedItems } = useSelector((store) => store.cart)
@@ -68,6 +68,7 @@ const OrderSummary = () => {
 
         {/* Clear Cart Button */}
         <button
+          onClick={() => dispatch(clearCart())}
           // onClick={() => dispatch(clearCart())}
           className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl
             border border-red-200 text-red-400

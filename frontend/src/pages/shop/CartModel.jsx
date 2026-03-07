@@ -2,12 +2,25 @@ import React from 'react'
 import { X, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import OrderSummary from './OrderSummary'
+import { updateQuantity, removeFromCart } from '../../redux/features/cart/cartSlice'
 // 👇 adjust these import paths to match your actual redux slice
 // import { removeFromCart, incrementQuantity, decrementQuantity } from '../../redux/cartSlice'
 
 const CartModel = ({ products, isOpen, onClose }) => {
   const dispatch = useDispatch()
+  
+  const handleQuantity = (type, _id) => {
+    const payload = {
+      _id,
+      type
+    }
+    dispatch(updateQuantity(payload))
+  }
 
+  const handleRemove = (e, _id) => {
+    e.preventDefault()
+    dispatch(removeFromCart(_id))
+  }
   return (
     <>
       {/* Backdrop */}
@@ -85,6 +98,7 @@ const CartModel = ({ products, isOpen, onClose }) => {
                   <div className="flex items-center gap-3 mt-2">
                     <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
                       <button
+                      onClick={() => handleQuantity("decrement", product._id)}
                         // onClick={() => dispatch(decrementQuantity(product.id))}
                         className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-white text-gray-600 transition-colors"
                       >
@@ -94,6 +108,7 @@ const CartModel = ({ products, isOpen, onClose }) => {
                         {product.quantity}
                       </span>
                       <button
+                        onClick={() => handleQuantity("increment", product._id)}
                         // onClick={() => dispatch(incrementQuantity(product.id))}
                         className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-white text-gray-600 transition-colors"
                       >
@@ -102,8 +117,9 @@ const CartModel = ({ products, isOpen, onClose }) => {
                     </div>
 
                     <button
+                    onClick={(e) => handleRemove(e, product._id)}
                     //   onClick={() => dispatch(removeFromCart(product.id))}
-                      className="text-red-400 hover:text-red-600 transition-colors"
+                      className="text-red-400 hover:text-blue-600 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
