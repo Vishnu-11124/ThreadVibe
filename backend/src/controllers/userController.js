@@ -37,4 +37,37 @@ const userRegistration = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, "User registered successfully", user));
 });
 
-export { userRegistration };
+const loginUser = asyncHandler(async (req, res) => {
+
+  const { email, password } = req.body;
+
+  // 1️⃣ Validate fields
+  if (!email?.trim() || !password?.trim()) {
+    throw new ApiError(400, "Email and password are required");
+  }
+
+  // 2️⃣ Find user
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 3️⃣ Check password
+  const isPasswordValid = await user.isPasswordCorrect(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid password!");
+  }
+
+  // 4️⃣ Remove password
+  user.password = undefined;
+
+  // 5️⃣ Send response
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "User logged in successfully", user));
+});
+
+
+export { userRegistration, loginUser };
