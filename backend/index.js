@@ -30,6 +30,19 @@ app.get('/', (req, res) => {
     res.send("Welcome back")
 })
 
+app.use((err, req, res, next) => {
+
+  const statusCode = err.statusCode || 500
+
+  res.status(statusCode).json({
+    success: false,
+    statusCode: statusCode,
+    message: err.message || "Internal Server Error",
+    errors: err.errors || []
+  })
+
+})
+
 
 app.listen(port, (req, res) =>{
     console.log(`Server is running on http://localhost:3000`);
