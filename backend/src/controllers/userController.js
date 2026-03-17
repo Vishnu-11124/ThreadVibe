@@ -80,8 +80,23 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  res.send("All users")
-})
+
+  // 🔐 Restrict access to admin only
+  if (req.user.role !== 'admin') {
+    throw new ApiError(403, "Access denied: Admin only");
+  }
+
+  const users = await User.find().select("-password");
+
+  if (users.length === 0) {
+    throw new ApiError(404, "No users found");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, users, "Users fetched successfully")
+  );
+});
+
 
 const deleteUser = asyncHandler(async (req, res) => {
 
@@ -105,6 +120,40 @@ const deleteUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "User deleted successfully"));
 });
 
+const updateUserRole = asyncHandler(async (req, res) => {
+  const { userId } = req.params
+  const { role } = req.body
+
+  // console.log(req)
+
+  const allowedRoles = ['admin', 'user']
+  if (!allowedRoles.includes(role)) {
+    throw new ApiError(400, "Invalid role")
+  }
+
+  // prevent self role change
+  if (req.user.userId === userId) {
+    throw new ApiError(400, "You cannot change your own role")
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { role },
+    { new: true }
+  ).select("-password")
+
+  // console.log(user)
+
+  if (!user) {
+    throw new ApiError(404, "User not found")
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, user, "User role updated successfully")
+  )
+})
+
+
 
 const logoutUser = asyncHandler(async (req, res) => {
   return res
@@ -120,4 +169,4 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 
-export { userRegistration, loginUser, getAllUsers, logoutUser, deleteUser };
+export { userRegistration, loginUser, getAllUsers, updateUserRole, logoutUser, deleteUser };
