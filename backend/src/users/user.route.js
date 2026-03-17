@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { deleteUser, getAllUsers, loginUser, logoutUser, userRegistration } from '../controllers/userController.js'
+import { deleteUser, getAllUsers, loginUser, logoutUser, updateUserRole, userRegistration } from '../controllers/userController.js'
 import verifyToken from '../middleware/verifyToken.js'
 
 // Register
@@ -14,6 +14,9 @@ router.get("/users", verifyToken, getAllUsers)
 
 // Delete user
 router.delete('/users/:id', verifyToken, deleteUser)
+
+// Update user role
+router.put('/users/:userId', verifyToken, updateUserRole)
 
 // Logout
 router.post('/logout', verifyToken, logoutUser)
