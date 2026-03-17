@@ -4,6 +4,7 @@ import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import generateToken from "../middleware/generateToken.js";
 
+
 const userRegistration = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -64,19 +65,59 @@ const loginUser = asyncHandler(async (req, res) => {
   // 4️⃣ Remove password
   user.password = undefined;
 
-  const token = await generateToken(user)
-  // console.log(token)
+  const token = generateToken(user)
+   console.log(token)
 
   // 5️⃣ Send response
   return res
     .status(200)
     .cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'None'
+      secure: false,
+      sameSite: 'Lax'
     })
     .json(new ApiResponse(200, "User logged in successfully",{ user, token }));
 });
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  res.send("All users")
+})
 
-export { userRegistration, loginUser };
+const deleteUser = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  // 1️⃣ Check if user is admin
+  if (req.user.role !== "admin") {
+    throw new ApiError(403, "Access denied. Admins only");
+  }
+
+  // 2️⃣ Delete user
+  const user = await User.findByIdAndDelete(id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 3️⃣ Send response
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "User deleted successfully"));
+});
+
+
+const logoutUser = asyncHandler(async (req, res) => {
+  return res
+        .status(200)
+        .clearCookie("token", {
+            httpOnly: true,
+            secure: true,      // change to true in production
+            sameSite: "Lax"
+        })
+        .json(
+            new ApiResponse(200, null, "User logged out successfully")
+        );
+})
+
+
+export { userRegistration, loginUser, getAllUsers, logoutUser, deleteUser };
