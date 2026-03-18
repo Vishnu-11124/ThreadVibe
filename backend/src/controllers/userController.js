@@ -153,6 +153,51 @@ const updateUserRole = asyncHandler(async (req, res) => {
   )
 })
 
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+
+  const {
+    username,
+    email,
+    password,
+    profileImage,
+    profession,
+    bio,
+  } = req.body;
+
+  let user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // update fields
+  if (username) user.username = username;
+
+  if (email && email !== user.email) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      throw new ApiError(400, "Email already in use");
+    }
+    user.email = email;
+  }
+
+  if (password) user.password = password;
+  if (profileImage) user.profileImage = profileImage;
+  if (profession) user.profession = profession;
+  if (bio) user.bio = bio;
+
+  await user.save();
+
+  // ✅ Fetch updated user WITHOUT password
+  const updatedUser = await User.findById(userId).select("-password");
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    user: updatedUser,
+  });
+});
 
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -169,4 +214,4 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 
-export { userRegistration, loginUser, getAllUsers, updateUserRole, logoutUser, deleteUser };
+export { userRegistration, loginUser, getAllUsers, updateUserProfile, updateUserRole, logoutUser, deleteUser };
