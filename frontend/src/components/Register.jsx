@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useRegisterUserMutation } from '../redux/features/auth/authApi'
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const Register = () => {
     const [message, setMessage] = useState('')
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    const [registerUser, { isLoading }] = useRegisterUserMutation()
+    const navigate = useNavigate()
 
     const handleRegister = async (e) => {
         e.preventDefault()
@@ -14,7 +20,19 @@ const Register = () => {
             email,
             password
         }
-        console.log(data)
+        
+        try {
+            const result = await registerUser(data).unwrap()
+            Toastify({
+              text: "Successfully created newUser",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+            }).showToast();
+            navigate("/login")
+        } catch (error) {
+            setMessage("Registration failed!!")
+        }
     }
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-blue-50 to-cyan-50 px-4 py-12 relative overflow-hidden">

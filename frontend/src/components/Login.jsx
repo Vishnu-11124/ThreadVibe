@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+// import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useLoginUserMutation } from '../redux/features/auth/authApi'
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const Login = () => {
     const [message, setMessage] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    // const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [loginUser, { isLoading }] = useLoginUserMutation()
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -12,7 +20,19 @@ const Login = () => {
             email,
             password
         }
-        console.log(data)
+        
+        try {
+            const result = await loginUser(data).unwrap()
+            Toastify({
+              text: "Successfully logined!",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+            }).showToast();
+            navigate("/")
+        } catch (error) {
+            setMessage("Login failed. Please check your credentials and try again.")
+        }
     }
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-blue-50 to-cyan-50 px-4 py-12 relative overflow-hidden">
