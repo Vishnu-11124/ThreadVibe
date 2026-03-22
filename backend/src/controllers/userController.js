@@ -76,7 +76,7 @@ const loginUser = asyncHandler(async (req, res) => {
       secure: false,
       sameSite: 'Lax'
     })
-    .json(new ApiResponse(200, "User logged in successfully",{ user, token }));
+    .json(new ApiResponse(200,{ user, token }, "User logged in successfully"));
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {

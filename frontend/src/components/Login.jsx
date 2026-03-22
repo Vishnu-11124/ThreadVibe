@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLoginUserMutation } from '../redux/features/auth/authApi'
 import Toastify from 'toastify-js'
 import "toastify-js/src/toastify.css"
+import { setUser } from '../redux/features/auth/authSlice'
 
 const Login = () => {
     const [message, setMessage] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const [loginUser, { isLoading }] = useLoginUserMutation()
 
@@ -23,6 +24,9 @@ const Login = () => {
         
         try {
             const result = await loginUser(data).unwrap()
+            // console.log(result)
+            
+            dispatch(setUser(result.data.user))
             Toastify({
               text: "Successfully logined!",
               duration: 3000,
