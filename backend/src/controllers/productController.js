@@ -64,5 +64,84 @@ const createProduct = asyncHandler(async (req, res) => {
   );
 });
 
+// get all products
+const getAllProducts = asyncHandler(async (req, res) => {
+  const {
+    category,
+    color,
+    minPrice,
+    maxPrice,
+    page = 1,
+    limit = 10,
+  } = req.query;
 
-export { createProduct }
+  let filter = {};
+
+  // ✅ Category filter
+  if (category && category !== "all") {
+    filter.category = category;
+  }
+
+  // ✅ Color filter (array field)
+  if (color && color !== "all") {
+    filter.colors = color;
+  }
+
+  // ✅ Price filter
+  if (minPrice && maxPrice) {
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+
+    if (!isNaN(min) && !isNaN(max)) {
+      filter.price = { $gte: min, $lte: max };
+    }
+  }
+
+  // ✅ Pagination
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  // ✅ Total count
+  const totalProducts = await Product.countDocuments(filter);
+  const totalPages = Math.ceil(totalProducts / limitNum);
+
+  // ✅ Fetch products
+  const products = await Product.find(filter)
+    .skip(skip)
+    .limit(limitNum)
+    .sort({ createdAt: -1 });
+
+  // ✅ Response
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { products, totalPages, totalProducts },
+      "Successfully fetched products"
+    )
+  );
+});
+
+
+// get single products
+const getSingleProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const product = await Product.findById(id);
+
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  const review = await Review.find({ productId: product._id });
+
+  if(!review){
+    throw new ApiError(404, "No reviews found");
+  }
+
+
+  res.status(200).json( new ApiResponse(200, {product, review}, "Product fetched successfully"))
+})
+
+
+export { createProduct, getAllProducts, getSingleProduct }
