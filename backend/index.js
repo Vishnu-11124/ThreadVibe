@@ -20,8 +20,10 @@ app.use(cors({
 
 // All routes
 import authRoutes from './src/users/user.route.js'
+import productRoutes from './src/products/products.routes.js'
 
 app.use('/api/auth', authRoutes)
+app.use('/api/products', productRoutes)
 
 // Connect to Database
 connectDB();
