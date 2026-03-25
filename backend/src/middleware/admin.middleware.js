@@ -1,0 +1,14 @@
+import ApiError from "../utils/ApiError.js";
+
+// ✅ Only Admin Access
+export const isAdmin = (req, res, next) => {
+  if (!req.user) {
+    throw new ApiError(401, "Unauthorized: No user found");
+  }
+
+  if (req.user.role !== "admin") {
+    throw new ApiError(403, "Access denied: Admin only");
+  }
+
+  next();
+};

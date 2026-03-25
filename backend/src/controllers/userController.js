@@ -81,11 +81,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const getAllUsers = asyncHandler(async (req, res) => {
 
-  // 🔐 Restrict access to admin only
-  if (req.user.role !== 'admin') {
-    throw new ApiError(403, "Access denied: Admin only");
-  }
-
   const users = await User.find().select("-password");
 
   if (users.length === 0) {
@@ -101,11 +96,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
 
   const { id } = req.params;
-
-  // 1️⃣ Check if user is admin
-  if (req.user.role !== "admin") {
-    throw new ApiError(403, "Access denied. Admins only");
-  }
 
   // 2️⃣ Delete user
   const user = await User.findByIdAndDelete(id);

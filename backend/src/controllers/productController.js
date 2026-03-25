@@ -127,21 +127,100 @@ const getAllProducts = asyncHandler(async (req, res) => {
 const getSingleProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // ✅ Get product
   const product = await Product.findById(id);
-
   if (!product) {
     throw new ApiError(404, "Product not found");
   }
 
-  const review = await Review.find({ productId: product._id });
+  // ✅ Get reviews
+  const reviews = await Review.find({ productId: product._id });
 
-  if(!review){
-    throw new ApiError(404, "No reviews found");
+  // ✅ Response
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { product, reviews },
+      "Product fetched successfully"
+    )
+  );
+});
+
+
+// update product
+const updateProduct = asyncHandler(async (req, res) => {
+  
+  const { id } = req.params;
+
+  // ✅ Check if product exists
+  const existingProduct = await Product.findById(id);
+
+  if (!existingProduct) {
+    throw new ApiError(404, "Product not found");
   }
 
+  // ✅ Update product
+  const updatedProduct = await Product.findByIdAndUpdate(
+    id,
+    { $set: req.body },
+    {
+      new: true, // return updated document
+      runValidators: true, // apply schema validation
+    },
+  );
 
-  res.status(200).json( new ApiResponse(200, {product, review}, "Product fetched successfully"))
-})
+  // ✅ Response
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedProduct, "Product updated successfully"));
+});
+
+// delete product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedProduct = await Product.findByIdAndDelete(id);
+
+  if (!deletedProduct) {
+    throw new ApiError(404, "Product not found");
+  }
+  
+  await Review.deleteMany({productId: deleteProduct._id})
+
+  return res.status(200).json(
+    new ApiResponse(200, deletedProduct, "Product deleted successfully")
+  );
+});
+
+// related products
+const relatedProducts = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // ✅ Get current product
+  const product = await Product.findById(id);
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  // ✅ Fetch related products
+  const relatedProducts = await Product.find({
+    category: product.category,
+    _id: { $ne: product._id },
+  })
+    .limit(4) // you can adjust (3–6 is common)
+    .sort({ createdAt: -1 }) // latest first
+
+  // ✅ Response
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      relatedProducts,
+      "Related products fetched successfully"
+    )
+  );
+});
 
 
-export { createProduct, getAllProducts, getSingleProduct }
+
+
+export { createProduct, getAllProducts, getSingleProduct, updateProduct, deleteProduct, relatedProducts }
