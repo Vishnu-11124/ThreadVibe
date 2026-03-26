@@ -14,22 +14,20 @@ export const productsApi = createApi({
     getAllProducts: builder.query({
       query: ({
         category = "all",
-        color = "all",
+        type = "all",
         minPrice = "",
         maxPrice = "",
         page = 1,
         limit = 10,
-        search = "",
       }) => ({
         url: "/",
         params: {
           category,
-          color,
+          type,
           minPrice,
           maxPrice,
           page,
           limit,
-          search,
         },
       }),
       providesTags: ["Products"],

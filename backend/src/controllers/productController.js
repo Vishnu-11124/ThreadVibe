@@ -68,7 +68,7 @@ const createProduct = asyncHandler(async (req, res) => {
 const getAllProducts = asyncHandler(async (req, res) => {
   const {
     category,
-    color,
+    type,
     minPrice,
     maxPrice,
     page = 1,
@@ -82,9 +82,9 @@ const getAllProducts = asyncHandler(async (req, res) => {
     filter.category = category;
   }
 
-  // ✅ Color filter (array field)
-  if (color && color !== "all") {
-    filter.colors = color;
+  // ✅ Type filter (FIXED)
+  if (type && type !== "all") {
+    filter.type = type;
   }
 
   // ✅ Price filter
@@ -102,17 +102,14 @@ const getAllProducts = asyncHandler(async (req, res) => {
   const limitNum = parseInt(limit);
   const skip = (pageNum - 1) * limitNum;
 
-  // ✅ Total count
   const totalProducts = await Product.countDocuments(filter);
   const totalPages = Math.ceil(totalProducts / limitNum);
 
-  // ✅ Fetch products
   const products = await Product.find(filter)
     .skip(skip)
     .limit(limitNum)
     .sort({ createdAt: -1 });
 
-  // ✅ Response
   return res.status(200).json(
     new ApiResponse(
       200,
@@ -121,6 +118,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     )
   );
 });
+
 
 
 // get single products
