@@ -57,4 +57,26 @@ const postReview = asyncHandler(async (req, res) => {
     );
 });
 
-export { postReview };
+// total review
+const totalReview = asyncHandler(async (req, res) => {
+    const totalReview = await Review.countDocuments({})
+    res.status(200).json(new ApiResponse(200, totalReview, "Total review fetched successfully"))
+})
+
+// get review by userId
+const userReview = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+
+    if(!userId) {
+        throw new ApiError(400,"UserId not found")
+    }
+
+    const review = await Review.find({userId: id}).sort({createdAt: -1})
+    if(review.length === 0) {
+        throw new ApiError(404, "No review found")
+    }
+    
+    res.status(200).json(new ApiResponse(200, review, "Review fetched successfully"))
+})
+
+export { postReview, totalReview, userReview };
