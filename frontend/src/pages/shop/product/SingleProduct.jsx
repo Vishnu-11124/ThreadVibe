@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useGetSingleProductQuery } from "../../../redux/features/products/productApi";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cart/cartSlice";
+import ReviewCard from "../review/ReviewCard";
 
 // ─── Star Rating Component ────────────────────────────────────────────────────
 const StarRating = ({ rating }) => (
@@ -34,12 +35,13 @@ const SingleProduct = () => {
   const { id } = useParams();
 
   const { data, isLoading, error } = useGetSingleProductQuery(id);
-  console.log(data?.data?.product);
+  // console.log(data?.data?.product);
   // console.log(data?.product)
 
   // In production: fetch product by id. Using mock for now.
   const product = data?.data?.product || {};
   const reviews = data?.data?.reviews || [];
+  // console.log(reviews)
 
   const dispatch = useDispatch();
 
@@ -317,15 +319,7 @@ const SingleProduct = () => {
 
       {/* ── Reviews ── */}
       <section className="max-w-6xl mx-auto px-4 py-10 mb-12">
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-            <span className="w-1 h-5 bg-gradient-to-b from-cyan-400 to-violet-500 rounded-full" />
-            Customer Reviews
-          </h3>
-          <p className="text-gray-300 text-sm">
-            No reviews yet. Be the first to review this product.
-          </p>
-        </div>
+        <ReviewCard reviewData={reviews}/>
       </section>
     </div>
   );

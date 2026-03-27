@@ -132,7 +132,9 @@ const getSingleProduct = asyncHandler(async (req, res) => {
   }
 
   // ✅ Get reviews
-  const reviews = await Review.find({ productId: product._id });
+  const reviews = await Review.find({ productId: product._id })
+  .populate("userId", "username email profileImage") // 🔥 FIX
+  .sort({ createdAt: -1 });
 
   // ✅ Response
   return res.status(200).json(
