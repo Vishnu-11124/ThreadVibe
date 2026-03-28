@@ -5,57 +5,62 @@ import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 
 const postReview = asyncHandler(async (req, res) => {
-    const { comment, rating, productId } = req.body;
+  const { comment, rating, productId } = req.body;
 
-    // ✅ Get user from auth middleware (IMPORTANT)
-    const userId = req.user?.userId
+  const userId = req.user?.userId;
 
-    if(!userId) {
-        throw new ApiError(400,"UserId not found")
-    }
+  if (!userId) {
+    throw new ApiError(400, "UserId not found");
+  }
 
-    // 🔒 Validation
-    if (!comment || !rating || !productId) {
-        throw new ApiError(400, "All fields are required");
-    }
+  // 🔒 Validation
+  if (!comment || !rating || !productId) {
+    throw new ApiError(400, "All fields are required");
+  }
 
-    if (rating < 1 || rating > 5) {
-        throw new ApiError(400, "Rating must be between 1 and 5");
-    }
+  if (rating < 1 || rating > 5) {
+    throw new ApiError(400, "Rating must be between 1 and 5");
+  }
 
-    // ✅ Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-        throw new ApiError(404, "Product not found");
-    }
+  // ✅ Check product
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
 
-    // 🚫 Prevent duplicate review
-    const existingReview = await Review.findOne({ productId, userId });
-    if (existingReview) {
-        throw new ApiError(400, "You have already reviewed this product");
-    }
+  // 🔍 Check existing review
+  let review = await Review.findOne({ productId, userId });
 
-    // ✅ Create review
-    const review = await Review.create({
-        comment,
-        rating,
-        productId,
-        userId
+  if (review) {
+    // ✏️ UPDATE review
+    review.comment = comment;
+    review.rating = rating;
+
+    await review.save();
+  } else {
+    // 🆕 CREATE review
+    review = await Review.create({
+      comment,
+      rating,
+      productId,
+      userId
     });
+  }
 
-    // ⭐ Update product rating
-    const reviews = await Review.find({ productId });
+  // ⭐ Recalculate rating
+  const reviews = await Review.find({ productId });
 
-    const avgRating =
-        reviews.reduce((acc, item) => acc + item.rating, 0) / reviews.length;
+  const avgRating =
+    reviews.reduce((acc, item) => acc + item.rating, 0) / reviews.length;
 
-    product.rating = avgRating;
-    await product.save();
+  product.rating = avgRating;
+  await product.save();
 
-    return res.status(201).json(
-        new ApiResponse(201, review, "Review posted successfully")
-    );
+  return res.status(200).json(
+    new ApiResponse(200, review, "Review saved successfully")
+  );
 });
+
 
 // total review
 const totalReview = asyncHandler(async (req, res) => {

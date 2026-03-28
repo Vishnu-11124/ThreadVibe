@@ -6,8 +6,8 @@ import PostReview from './PostReview'
 const ReviewCard = ({ reviewData }) => {
   const [openReview, setOpenReview] = useState(false)
 
-  const reviews = reviewData || []
-
+  const reviews = reviewData?.reviews || {}
+  
   const handleOpenReview = () => setOpenReview(true)
   const handleCloseReview = () => setOpenReview(false)
 
@@ -97,6 +97,7 @@ const ReviewCard = ({ reviewData }) => {
       <PostReview
         openReview={openReview}
         handleClose={handleCloseReview}
+        productId={reviewData?.product._id}
       />
     </div>
   )

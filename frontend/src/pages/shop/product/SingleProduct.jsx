@@ -40,7 +40,6 @@ const SingleProduct = () => {
 
   // In production: fetch product by id. Using mock for now.
   const product = data?.data?.product || {};
-  const reviews = data?.data?.reviews || [];
   // console.log(reviews)
 
   const dispatch = useDispatch();
@@ -319,7 +318,7 @@ const SingleProduct = () => {
 
       {/* ── Reviews ── */}
       <section className="max-w-6xl mx-auto px-4 py-10 mb-12">
-        <ReviewCard reviewData={reviews}/>
+        <ReviewCard reviewData={data?.data}/>
       </section>
     </div>
   );
