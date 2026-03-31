@@ -22,11 +22,12 @@ app.use(cors({
 import authRoutes from './src/users/user.route.js'
 import productRoutes from './src/products/products.routes.js'
 import reviewRoutes from './src/reviews/reviews.routes.js'
-
+import orderRoutes from './src/orders/orders.route.js'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/reviews', reviewRoutes)
+app.use('/api/orders', orderRoutes)
 
 
 // Connect to Database

@@ -2,6 +2,9 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import Product from "../products/products.model.js";
+import Order from "../orders/orders.model.js";
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 const checkoutSession = asyncHandler(async (req, res) => {
   const { products } = req.body;
@@ -60,4 +63,57 @@ const checkoutSession = asyncHandler(async (req, res) => {
   );
 });
 
-export { checkoutSession };
+const confirmPayment = asyncHandler(async (req, res) => {
+  const { sessionId } = req.body;
+
+  if (!sessionId) {
+    throw new ApiError(400, "Session ID is required");
+  }
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items", "payment_intent"],
+  });
+
+  if (session.payment_status !== "paid") {
+    throw new ApiError(400, "Payment not completed");
+  }
+
+  const paymentIntentId = session.payment_intent.id;
+
+  let order = await Order.findOne({ orderId: paymentIntentId });
+
+  if (!order) {
+    const originalProducts = JSON.parse(session.metadata.products);
+
+    const lineItems = originalProducts.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    }));
+
+    const amount = session.amount_total
+      ? session.amount_total / 100
+      : 0;
+
+    order = new Order({
+      orderId: paymentIntentId,
+      totalAmount: amount,
+      products: lineItems,
+      userId: session.metadata.userId,
+      orderStatus: "processing",
+    });
+  } else {
+    order.orderStatus = "processing";
+  }
+
+  await order.save();
+
+  res.status(200).json(
+    new ApiResponse(true, "Payment confirmed", {
+      orderId: order._id,
+      status: order.orderStatus,
+    })
+  );
+});
+
+
+export { checkoutSession, confirmPayment };
