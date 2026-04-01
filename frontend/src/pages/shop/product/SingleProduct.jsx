@@ -33,8 +33,17 @@ const StarRating = ({ rating }) => (
 // ─── Main Component ───────────────────────────────────────────────────────────
 const SingleProduct = () => {
   const { id } = useParams();
+  console.log("Id",id)
 
-  const { data, isLoading, error } = useGetSingleProductQuery(id);
+  if(!id) {
+    return <div className="text-center py-20 text-red-500">Product ID is missing</div>;
+  }
+
+const { data, isLoading, error } = useGetSingleProductQuery(id, {
+  skip: !id, // 🔥 prevents API call when id is undefined
+});
+
+  // console.log(id)
   // console.log(data?.data?.product);
   // console.log(data?.product)
 
@@ -56,11 +65,12 @@ const SingleProduct = () => {
         )
       : 0;
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (isLoading || !product) {
+    return <div className="text-center py-20">Loading...</div>;
   }
+
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div className="text-center text-red-500">Something went wrong</div>;
   }
 
   const handleAddToCart = () => {

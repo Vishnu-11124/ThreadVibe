@@ -3,9 +3,62 @@ import { Trash2, ShoppingBag, Tag, Receipt, ChevronRight } from 'lucide-react'
 import { useSelector, useDispatch } from 'react-redux'
 // import { clearCart } from '../../redux/cartSlice' // adjust path to your slice
 import { clearCart } from '../../redux/features/cart/cartSlice' // adjust path to your slice
-const OrderSummary = () => {
+
+import { stripePromise } from '../../utils/stripe'; // adjust path if needed
+
+import { getBaseURL } from '../../utils/baseURL'
+
+const OrderSummary = (e) => {
   const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  // console.log(user)
+  const products = useSelector((state) => state.cart.products)
+  // console.log(products)
   const { tax, taxRate, totalPrice, grandTotal, selectedItems } = useSelector((store) => store.cart)
+
+  // Payment integration
+  const makePayment = async (e) => {
+  try {
+    const body = {
+      products: products.map(item => ({
+        productId: item._id,
+        quantity: item.quantity || 1
+      })),
+      userId: user?._id
+    };
+    console.log("body",body)
+
+
+    const response = await fetch(
+      `${getBaseURL()}/api/orders/create-checkout-session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      }
+    );
+
+    console.log("response",response)
+
+    const session = await response.json();
+    console.log("session",session)
+
+    if (!response.ok) {
+      console.error(session);
+      return;
+    }
+
+    // ✅ NEW Stripe redirect
+    window.location.href = session.message.url;
+
+  } catch (error) {
+    console.error("Payment error:", error);
+  }
+};
+
+
 
   return (
     <div className="space-y-3">
@@ -56,7 +109,12 @@ const OrderSummary = () => {
       <div className="space-y-2 pt-1">
 
         {/* Checkout Button */}
-        <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl
+        <button
+         onClick={(e) => {
+          e.preventDefault()
+          makePayment()
+         }}
+         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl
           bg-gradient-to-r from-purple-500 via-pink-500 to-red-500
           text-white font-semibold text-sm
           hover:shadow-lg hover:shadow-pink-200 hover:scale-[1.02]

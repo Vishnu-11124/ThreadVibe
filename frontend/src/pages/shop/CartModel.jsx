@@ -81,7 +81,7 @@ const CartModel = ({ products, isOpen, onClose }) => {
                 {/* Image */}
                 <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
                   <img
-                    src={product.images}
+                    src={product.images?.[0]}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />

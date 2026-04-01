@@ -3,11 +3,14 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import Product from "../products/products.model.js";
 import Order from "../orders/orders.model.js";
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 
 const checkoutSession = asyncHandler(async (req, res) => {
-  const { products } = req.body;
+  const { products, userId } = req.body;
 
   if (!products || !Array.isArray(products) || products.length === 0) {
     throw new ApiError(400, "Products are required");
@@ -24,8 +27,8 @@ const checkoutSession = asyncHandler(async (req, res) => {
       return {
         name: product.name,
         price: product.price,
-        image: product.images[0],
-        quantity: item.quantity,
+        image: product.images?.[0] || "",
+        quantity: item.quantity || 1,
       };
     })
   );
@@ -48,20 +51,23 @@ const checkoutSession = asyncHandler(async (req, res) => {
     mode: "payment",
 
     metadata: {
-      userId: req.user._id.toString(),
+      userId: userId,
       products: JSON.stringify(products),
     },
 
-    success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.CLIENT_URL}/cancel`,
+    success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `http://localhost:5173/shop`,
+
+
   });
 
   res.status(200).json(
     new ApiResponse(true, "Checkout session created", {
-      sessionId: session.id,
+      url: session.url,
     })
   );
 });
+
 
 const confirmPayment = asyncHandler(async (req, res) => {
   const { sessionId } = req.body;
