@@ -7,9 +7,7 @@ import ShopPage from '../pages/shop/ShopPage'
 import SingleProduct from '../pages/shop/product/SingleProduct'
 import Login from '../components/Login'
 import Register from '../components/Register'
-
-
-
+import PaymentSuccess from '../components/PaymentSuccess'
 
  const route = createBrowserRouter(
     createRoutesFromElements(
@@ -20,7 +18,7 @@ import Register from '../components/Register'
            <Route path="/shop/:id" element={<SingleProduct/>} />  
            <Route path="/login" element={<Login/>}/> 
            <Route path='/register' element={<Register/>}/>
-           <Route path="/success" element={<div>Success Order</div>} />
+           <Route path="/success" element={<PaymentSuccess />} />
         
         </Route>
         
