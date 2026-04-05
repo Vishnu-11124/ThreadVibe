@@ -4,6 +4,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import Product from "../products/products.model.js";
 import Order from "../orders/orders.model.js";
 import Stripe from 'stripe';
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -121,5 +122,27 @@ const confirmPayment = asyncHandler(async (req, res) => {
   );
 });
 
+const getUserOrders = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
 
-export { checkoutSession, confirmPayment };
+  if (!userId) {
+    throw new ApiError(400, "User ID is required");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid User ID");
+  }
+
+  const orders = await Order.find({ userId })
+  .populate("userId", "name email")
+  .populate("products.productId", "name price")
+  .sort({ createdAt: -1 });
+
+
+  res.status(200).json(
+    new ApiResponse(true, "Orders retrieved successfully", orders)
+  );
+});
+
+
+export { checkoutSession, confirmPayment, getUserOrders };
