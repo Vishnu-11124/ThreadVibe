@@ -144,5 +144,61 @@ const getUserOrders = asyncHandler(async (req, res) => {
   );
 });
 
+const getOrderById = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
 
-export { checkoutSession, confirmPayment, getUserOrders };
+  if (!orderId) {
+    throw new ApiError(400, "Order ID is required");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    throw new ApiError(400, "Invalid Order ID");
+  }
+
+  const order = await Order.findById(orderId)
+    .populate("userId", "name email")
+    .populate("products.productId", "name price");
+
+    console.log(order)
+
+  if (!order) {
+    throw new ApiError(404, "Order not found");
+  }
+
+  // 🔥 SECURITY CHECK
+  const orderUserId = order.userId._id
+  ? order.userId._id.toString()
+  : order.userId.toString();
+
+  console.log(orderUserId)
+  console.log(req.user)
+
+if (
+  orderUserId !== req.user.userId.toString() &&
+  req.user.role !== "admin"
+) {
+  throw new ApiError(403, "Not authorized to view this order");
+}
+
+
+  res.status(200).json(
+    new ApiResponse(true, "Order retrieved successfully", order)
+  );
+});
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find()
+    .populate("userId", "name email")
+    .populate("products.productId", "name price")
+    .sort({ createdAt: -1 });
+
+  res.status(200).json(
+    new ApiResponse(true, "Orders fetched successfully", {
+      totalOrders: orders.length,
+      orders
+    })
+  );
+});
+
+
+export { checkoutSession, confirmPayment, getUserOrders, getOrderById, getAllOrders };
