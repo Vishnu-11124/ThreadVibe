@@ -201,4 +201,90 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 
 
-export { checkoutSession, confirmPayment, getUserOrders, getOrderById, getAllOrders };
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const { orderStatus } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    throw new ApiError(400, "Invalid Order ID");
+  }
+
+  const validStatuses = [
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled"
+  ];
+
+  if (!validStatuses.includes(orderStatus)) {
+    throw new ApiError(400, "Invalid order status");
+  }
+
+  let order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new ApiError(404, "Order not found");
+  }
+
+  // 🔥 Prevent invalid transitions
+  if (order.orderStatus === "delivered") {
+    throw new ApiError(400, "Order already delivered");
+  }
+
+  if (order.orderStatus === "cancelled") {
+    throw new ApiError(400, "Cancelled order cannot be updated");
+  }
+
+  order.orderStatus = orderStatus;
+
+  // 🔥 Auto timestamps
+  if (orderStatus === "shipped") {
+    order.shippedAt = new Date();
+  }
+
+  if (orderStatus === "delivered") {
+    order.deliveredAt = new Date();
+  }
+
+  await order.save();
+
+  // 🔥 Re-fetch with populate (important)
+  order = await Order.findById(orderId)
+    .populate("userId", "name email")
+    .populate("products.productId", "name price");
+
+  res.status(200).json(
+    new ApiResponse(true, "Order status updated successfully", order)
+  );
+});
+
+const deleteOrder = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    throw new ApiError(400, "Invalid Order ID");
+  }
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new ApiError(404, "Order not found");
+  }
+
+  // ❌ Restrict deletion
+  if (["shipped", "delivered"].includes(order.orderStatus)) {
+    throw new ApiError(400, "Cannot delete shipped or delivered orders");
+  }
+
+  await Order.findByIdAndDelete(orderId);
+
+  res.status(200).json(
+    new ApiResponse(true, "Order deleted successfully", {
+      orderId: order._id
+    })
+  );
+});
+
+
+export { checkoutSession, confirmPayment, getUserOrders, getOrderById, getAllOrders, updateOrderStatus, deleteOrder };
