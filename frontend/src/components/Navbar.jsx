@@ -38,9 +38,10 @@ export default function Navbar() {
   // admin dropdown
   const adminDropDownMenus = [
     { label: "Dashboard", path: "/dashboard/admin"},
-    { label: "Manage Items", path: "/dashboard/manageProducts"},
-    { label: "All Orders", path: "/dashboard/manageOrders"},
-    { label: "Add New Post", path: "/dashboard/addNewPost"},
+    { label: "Manage Items", path: "/dashboard/manage-products"},
+    { label: "All Orders", path: "/dashboard/manage-orders"},
+    { label: "Add New Post", path: "/dashboard/add-new-post"},
+    { label: "Manage Users", path: "/dashboard/users"},
   ]
 
   // user dropdown
