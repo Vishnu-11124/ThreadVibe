@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProductQuery } from "../../../redux/features/products/productApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/features/cart/cartSlice";
 import ReviewCard from "../review/ReviewCard";
 
@@ -33,15 +33,20 @@ const StarRating = ({ rating }) => (
 // ─── Main Component ───────────────────────────────────────────────────────────
 const SingleProduct = () => {
   const { id } = useParams();
-  console.log("Id",id)
+  console.log("Id", id);
 
-  if(!id) {
-    return <div className="text-center py-20 text-red-500">Product ID is missing</div>;
+  if (!id) {
+    return (
+      <div className="text-center py-20 text-red-500">
+        Product ID is missing
+      </div>
+    );
   }
 
-const { data, isLoading, error } = useGetSingleProductQuery(id, {
-  skip: !id, // 🔥 prevents API call when id is undefined
-});
+  const { data, isLoading, error } = useGetSingleProductQuery(id, {
+    skip: !id, // 🔥 prevents API call when id is undefined
+  });
+  const { user } = useSelector((state) => state.auth);
 
   // console.log(id)
   // console.log(data?.data?.product);
@@ -74,6 +79,10 @@ const { data, isLoading, error } = useGetSingleProductQuery(id, {
   }
 
   const handleAddToCart = () => {
+    if (!user) {
+      return alert("Please log in to add items to your cart.");
+    }
+
     if (!selectedSize) return alert("Please select a size.");
     setAddedToCart(true);
     dispatch(
@@ -328,7 +337,7 @@ const { data, isLoading, error } = useGetSingleProductQuery(id, {
 
       {/* ── Reviews ── */}
       <section className="max-w-6xl mx-auto px-4 py-10 mb-12">
-        <ReviewCard reviewData={data?.data}/>
+        <ReviewCard reviewData={data?.data} />
       </section>
     </div>
   );

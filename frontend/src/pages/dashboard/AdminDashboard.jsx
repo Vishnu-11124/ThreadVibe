@@ -5,14 +5,14 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/features/auth/authSlice'
 
 const navItems = [
-    { path: '/dashboard', label: 'Dashboard'},
-    { path: '/dashboard/orders', label: 'Orders' },
-    { path: '/dashboard/payments', label: 'Payments' },
-    { path: '/dashboard/profile', label: 'Profile' },
-    { path: '/dashboard/reviews', label: 'Reviews' },
+    { path: '/dashboard/admin', label: 'Dashboard'},
+    { path: '/dashboard/add-new-post', label: 'Add New Product' },
+    { path: '/dashboard/manage-products', label: 'Manage Products' },
+    { path: '/dashboard/users', label: 'Users' },
+    { path: '/dashboard/manage-orders', label: 'Manage Orders' },
 ]
 
-const UserDashboard = () => {
+const AdminDashboard = () => {
     const [logoutUser] = useLogoutUserMutation()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -64,4 +64,4 @@ const UserDashboard = () => {
   )
 }
 
-export default UserDashboard
+export default AdminDashboard
