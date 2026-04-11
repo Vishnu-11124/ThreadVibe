@@ -123,7 +123,7 @@ const confirmPayment = asyncHandler(async (req, res) => {
 });
 
 const getUserOrders = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.user;
 
   if (!userId) {
     throw new ApiError(400, "User ID is required");
@@ -140,7 +140,7 @@ const getUserOrders = asyncHandler(async (req, res) => {
 
 
   res.status(200).json(
-    new ApiResponse(true, "Orders retrieved successfully", orders)
+    new ApiResponse(true, orders, "Orders retrieved successfully")
   );
 });
 

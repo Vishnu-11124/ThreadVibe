@@ -14,7 +14,7 @@ import PaymentSuccess from "../components/PaymentSuccess";
 import PrivateRoute from "./privateRoute";
 import DashboardLayout from "../pages/dashboard/Dashboard";
 import UserDMain from "../pages/dashboard/user/UserDMain";
-
+import UserOrders from "../pages/dashboard/user/UserOrders"
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
@@ -37,7 +37,7 @@ const route = createBrowserRouter(
       >
         {/* user routes */}
         <Route index element={<UserDMain />} />
-        <Route path="orders" element={<h1>Orders</h1>} />
+        <Route path="orders" element={<UserOrders />} />
         <Route path="payments" element={<h1>Payments</h1>} />
         <Route path="profile" element={<h1>profile</h1>} />
         <Route path="reviews" element={<h1>Reviews</h1>} />

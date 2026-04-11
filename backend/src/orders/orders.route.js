@@ -13,7 +13,7 @@ router.post('/create-checkout-session', checkoutSession)
 router.post('/confirm-payment', confirmPayment)
 
 // get orders by user id
-router.get('/user/:userId', verifyToken, isAdmin, getUserOrders )
+router.get('/user-orders', verifyToken, getUserOrders )
 
 // get order by order id
 router.get('/order/:orderId', verifyToken, getOrderById )
