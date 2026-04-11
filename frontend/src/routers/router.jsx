@@ -13,6 +13,7 @@ import Register from "../components/Register";
 import PaymentSuccess from "../components/PaymentSuccess";
 import PrivateRoute from "./privateRoute";
 import DashboardLayout from "../pages/dashboard/Dashboard";
+import UserDMain from "../pages/dashboard/user/UserDMain";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +36,7 @@ const route = createBrowserRouter(
         }
       >
         {/* user routes */}
-        <Route index element={<h1>User dashboard</h1>} />
+        <Route index element={<UserDMain />} />
         <Route path="orders" element={<h1>Orders</h1>} />
         <Route path="payments" element={<h1>Payments</h1>} />
         <Route path="profile" element={<h1>profile</h1>} />
