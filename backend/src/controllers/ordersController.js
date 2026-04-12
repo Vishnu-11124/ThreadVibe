@@ -182,7 +182,7 @@ if (
 
 
   res.status(200).json(
-    new ApiResponse(true, "Order retrieved successfully", order)
+    new ApiResponse(true,  order, "Order retrieved successfully")
   );
 });
 

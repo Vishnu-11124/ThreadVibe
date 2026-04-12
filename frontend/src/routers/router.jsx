@@ -15,6 +15,8 @@ import PrivateRoute from "./privateRoute";
 import DashboardLayout from "../pages/dashboard/Dashboard";
 import UserDMain from "../pages/dashboard/user/UserDMain";
 import UserOrders from "../pages/dashboard/user/UserOrders"
+import OrderDetails from "../pages/dashboard/user/OrderDetails";
+
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
@@ -25,6 +27,7 @@ const route = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/success" element={<PaymentSuccess />} />
+      <Route path="/orders/:orderId" element={<OrderDetails />}/>
 
       {/* Dashboard */}
       <Route

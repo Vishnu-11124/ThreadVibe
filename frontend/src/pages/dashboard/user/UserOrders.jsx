@@ -16,7 +16,7 @@ const { data: orders, error, isLoading } = useGetOrdersByUserIdQuery();
 if (error) {
   return <p className="text-center text-red-400 text-lg mt-20">Error : {error.message}</p>
 }
-console.log(orders)
+// console.log(orders)
   return (
     <div className="p-8 min-h-screen bg-gray-50">
       <div className="mb-8">
