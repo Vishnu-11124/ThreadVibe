@@ -36,11 +36,11 @@ const getUserStats = asyncHandler(async (req, res) => {
   const totalPurchasedProducts = totalPurchasedProductsResult.length;
 
   res.status(200).json(
-    new ApiResponse(200, "User stats fetched successfully", {
+    new ApiResponse(200,  {
       totalPaymentAmount,
       totalReviews,
       totalPurchasedProducts,
-    }),
+    }, "User stats fetched successfully"),
   );
 });
 
@@ -85,14 +85,14 @@ const getAdminStats = asyncHandler(async (req, res) => {
   }));
 
   res.status(200).json(
-    new ApiResponse(200, "Admin stats fetched successfully", {
+    new ApiResponse(200,  {
       totalOrders,
       totalProducts,
       totalReviews,
       totalUsers,
       totalRevenue,
       monthlyRevenue,
-    })
+    }, "Admin stats fetched successfully")
   );
 });
 

@@ -9,16 +9,21 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const UserDMain = () => {
   const { user } = useSelector((state) => state.auth);
-  const { data: stats, error, isLoading } = useGetUserStatsQuery();
-  console.log(stats);
+const { data: stats, error, isLoading } = useGetUserStatsQuery();
+  console.log("hw",stats);
   if (isLoading) {
     return <h1 className="text-center text-gray-400 text-lg mt-20">Loading...</h1>;
   }
   if (error) {
-    return <h1 className="text-center text-red-400 text-lg mt-20">{error}</h1>;
-  }
+  return (
+    <h1 className="text-center text-red-400 text-lg mt-20">
+      {error?.data?.message || "Something went wrong"}
+    </h1>
+  );
+}
+
   if (!stats) {
-    return <h1 className="text-center text-gray-400 text-lg mt-20">No data found</h1>;
+    return <h1 className="text-center text-gray-400 text-lg mt-20">No stats found</h1>;
   }
 
   const data = {
@@ -27,9 +32,9 @@ const UserDMain = () => {
       {
         label: "User Stats",
         data: [
-          stats.message.totalPurchasedProducts,
-          stats.message.totalPaymentAmount,
-          stats.message.totalReviews,
+          stats.data.totalPurchasedProducts,
+          stats.data.totalPaymentAmount,
+          stats.data.totalReviews,
         ],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
         hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
@@ -59,7 +64,7 @@ const UserDMain = () => {
         <p className="text-base text-gray-400 mt-1">Hi, <span className="text-gray-700 font-semibold">{user?.username}</span>! Welcome to your dashboard</p>
       </div>
       <hr />
-      <UserStats stats={stats} />
+      <UserStats stats={stats.data} />
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 mt-4 max-w-[800px] mx-auto">
   <Bar data={data} options={option} />
 </div>
