@@ -26,8 +26,8 @@ const reviewApi = createApi({
       }),
     }),
     getReviewsByUserId: builder.query({
-      query: (userId) => ({
-        url: `/${userId}`,
+      query: () => ({
+        url: '/user-reviews',
         method: "GET",
       }),
       providesTags: (result) =>

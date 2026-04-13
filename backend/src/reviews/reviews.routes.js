@@ -11,6 +11,6 @@ router.post("/post-review", verifyToken , postReview)
 router.get("/total-review", totalReview)
 
 // userReview
-router.get("/:userId", userReview)
+router.get("/user-reviews", verifyToken, userReview)
 
 export default router

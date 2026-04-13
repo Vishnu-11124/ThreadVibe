@@ -70,7 +70,7 @@ const totalReview = asyncHandler(async (req, res) => {
 
 // get review by userId
 const userReview = asyncHandler(async (req, res) => {
-    const { userId } = req.params
+    const { userId } = req.user
 
     if(!userId) {
         throw new ApiError(400,"UserId not found")
