@@ -17,6 +17,7 @@ import UserDMain from "../pages/dashboard/user/UserDMain";
 import UserOrders from "../pages/dashboard/user/UserOrders"
 import OrderDetails from "../pages/dashboard/user/OrderDetails";
 import UserPayments from "../pages/dashboard/user/UserPayments";
+import UserReiews from "../pages/dashboard/user/UserReiews";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -44,7 +45,7 @@ const route = createBrowserRouter(
         <Route path="orders" element={<UserOrders />} />
         <Route path="payments" element={<UserPayments />} />
         <Route path="profile" element={<h1>profile</h1>} />
-        <Route path="reviews" element={<h1>Reviews</h1>} />
+        <Route path="reviews" element={<UserReiews />} />
 
         {/* admin routes */}
         <Route

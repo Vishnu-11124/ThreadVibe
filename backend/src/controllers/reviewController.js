@@ -76,7 +76,7 @@ const userReview = asyncHandler(async (req, res) => {
         throw new ApiError(400,"UserId not found")
     }
 
-const review = await Review.find({ userId }).sort({ createdAt: -1 })
+const review = await Review.find({ userId }).populate("productId", "name images").sort({ createdAt: -1 })
     if(review.length === 0) {
         throw new ApiError(404, "No review found")
     }
