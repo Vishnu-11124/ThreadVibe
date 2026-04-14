@@ -162,20 +162,24 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 
   // update fields
-  if (username) user.username = username;
+  if (username !== undefined) user.username = username;
 
-  if (email && email !== user.email) {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      throw new ApiError(400, "Email already in use");
-    }
-    user.email = email;
+if (email && email !== user.email) {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new ApiError(400, "Email already in use");
   }
+  user.email = email;
+}
 
-  if (password) user.password = password;
-  if (profileImage) user.profileImage = profileImage;
-  if (profession) user.profession = profession;
-  if (bio) user.bio = bio;
+if (password !== undefined) user.password = password;
+
+if (profileImage !== undefined) user.profileImage = profileImage;
+
+if (profession !== undefined) user.profession = profession;
+
+if (bio !== undefined) user.bio = bio;
+
 
   await user.save();
 
