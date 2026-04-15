@@ -19,6 +19,7 @@ import OrderDetails from "../pages/dashboard/user/OrderDetails";
 import UserPayments from "../pages/dashboard/user/UserPayments";
 import UserReiews from "../pages/dashboard/user/UserReiews";
 import UserProfile from "../pages/dashboard/user/UserProfile";
+import AdminDMain from "../pages/dashboard/admin/AdminDMain";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -53,7 +54,7 @@ const route = createBrowserRouter(
           path="admin"
           element={
             <PrivateRoute role="admin">
-              <h1>Admin Dashboard</h1>
+              <AdminDMain />
             </PrivateRoute>
           }
         />
