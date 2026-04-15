@@ -26,7 +26,10 @@ const Login = () => {
             const result = await loginUser(data).unwrap()
             // console.log(result)
             
-            dispatch(setUser(result.data.user))
+dispatch(setUser({
+    user: result.data.user,
+    token: result.data.token
+}))
             Toastify({
               text: "Successfully logined!",
               duration: 3000,

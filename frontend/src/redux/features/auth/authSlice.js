@@ -2,15 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const loadUserFromLocalStorage = () => {
     try {
-        const serializedState = localStorage.getItem('user')
-        if (serializedState === null) {
-            return { user: null}
-        }
-        return { user: JSON.parse(serializedState)}
-    } catch (error) {
-        return { user: null}
+        const data = localStorage.getItem('auth')
+        if (!data) return { user: null, token: null }
+
+        return JSON.parse(data)
+    } catch {
+        return { user: null, token: null }
     }
 }
+
 
 const initialState = loadUserFromLocalStorage()
 
@@ -18,18 +18,22 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUser : (state, action) => {
-            state.user = action.payload
-            localStorage.setItem('user', JSON.stringify(state.user))
-        
-        },
-        logout : {
-            reducer: (state) => {
-                state.user = null
-                localStorage.removeItem('user')
+        setUser: (state, action) => {
+    state.user = action.payload.user
+    state.token = action.payload.token
 
-            }
-        }
+    localStorage.setItem('auth', JSON.stringify({
+        user: state.user,
+        token: state.token
+    }))
+},
+
+        logout: (state) => {
+    state.user = null
+    state.token = null
+    localStorage.removeItem('auth')
+}
+
     }
 
 })

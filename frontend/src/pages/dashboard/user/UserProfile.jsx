@@ -9,23 +9,20 @@ const UserProfile = () => {
     const dispatch = useDispatch()
     const location = useLocation()
 
-    const { user } = useSelector((state) => state.auth)
-
-    const userData = user?.user
+    const { user, token } = useSelector((state) => state.auth)
 
     if (!user) {
-        alert('You must be logged in to access this page')
         return <Navigate to="/login" state={{ from: location }} replace />
     }
 
     const [editProfile, { isLoading }] = useEditProfileMutation()
 
     const formData = {
-        username: userData?.username || '',
-        email: userData?.email || '',
-        bio: userData?.bio || '',
-        profileImage: userData?.profileImage || '',
-        profession: userData?.profession || ''
+        username: user.username || '',
+        email: user.email || '',
+        bio: user.bio || '',
+        profileImage: user.profileImage || '',
+        profession: user.profession || ''
     }
 
     const [updatedData, setUpdatedData] = useState({})
@@ -38,23 +35,14 @@ const UserProfile = () => {
     const handleChange = (e) => {
         const { name, value } = e.target
 
-        if (value !== formData[name]) {
-            setUpdatedData((prev) => ({
-                ...prev,
-                [name]: value
-            }))
-        } else {
-            setUpdatedData((prev) => {
-                const newData = { ...prev }
-                delete newData[name]
-                return newData
-            })
-        }
+        setUpdatedData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(updatedData)
 
         if (Object.keys(updatedData).length === 0) {
             alert("No changes made")
@@ -65,8 +53,8 @@ const UserProfile = () => {
             const response = await editProfile(updatedData).unwrap()
 
             dispatch(setUser({
-                ...user,
-                user: response.user
+                user: response.user,
+                token: token
             }))
 
             setIsModalOpen(false)
@@ -83,24 +71,28 @@ const UserProfile = () => {
             {/* Profile Card */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 max-w-xl">
 
-                {/* Avatar + Info */}
                 <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                     <img
-                        src={userData?.profileImage || userImage}
+                        src={user.profileImage || userImage}
                         className="w-24 h-24 rounded-full object-cover ring-2 ring-gray-100"
                         alt="User profile"
                     />
+
                     <div className="flex flex-col gap-2 text-center sm:text-left">
-                        <h2 className="text-xl font-extrabold text-gray-900">{userData?.username}</h2>
-                        <p className="text-sm text-gray-400">{userData?.email}</p>
-                        <p className="text-sm text-gray-500 font-medium">{userData?.profession || <span className="text-gray-300">No profession</span>}</p>
-                        <p className="text-sm text-gray-500">{userData?.bio || <span className="text-gray-300">No bio</span>}</p>
+                        <h2 className="text-xl font-extrabold text-gray-900">{user.username}</h2>
+                        <p className="text-sm text-gray-400">{user.email}</p>
+                        <p className="text-sm text-gray-500 font-medium">
+                            {user.profession || <span className="text-gray-300">No profession</span>}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                            {user.bio || <span className="text-gray-300">No bio</span>}
+                        </p>
                     </div>
                 </div>
 
                 <button
                     onClick={handleProfile}
-                    className="mt-6 w-full sm:w-auto px-5 py-2 text-sm font-semibold bg-gray-900 text-white rounded-xl hover:bg-gray-700 transition-all duration-200"
+                    className="mt-6 px-5 py-2 text-sm font-semibold bg-gray-900 text-white rounded-xl hover:bg-gray-700 transition-all duration-200"
                 >
                     Edit Profile
                 </button>
@@ -109,17 +101,15 @@ const UserProfile = () => {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 px-4">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
+                    <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg">
 
-                        {/* Header */}
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-lg font-extrabold text-gray-900">Edit Profile</h2>
-                            <span onClick={handleProfile} className="cursor-pointer text-gray-400 hover:text-gray-900 text-xl font-bold transition-colors">✕</span>
+                            <span onClick={handleProfile} className="text-gray-400 hover:text-gray-900 cursor-pointer text-xl font-bold transition-colors">✕</span>
                         </div>
 
                         <hr className="border-gray-100 mb-4" />
 
-                        {/* Form */}
                         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
                             <input
@@ -160,12 +150,11 @@ const UserProfile = () => {
                             <input
                                 type="password"
                                 name="password"
-                                placeholder="Enter new password"
+                                placeholder="New password"
                                 onChange={handleChange}
                                 className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200"
                             />
 
-                            {/* Buttons */}
                             <div className="flex justify-end gap-2 mt-2">
                                 <button
                                     type="button"
@@ -177,7 +166,7 @@ const UserProfile = () => {
 
                                 <button
                                     type="submit"
-                                    disabled={isLoading || Object.keys(updatedData).length === 0}
+                                    disabled={isLoading}
                                     className="px-4 py-2 text-sm font-semibold bg-gray-900 text-white rounded-xl hover:bg-gray-700 transition-all duration-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? "Updating..." : "Update"}
