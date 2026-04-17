@@ -20,6 +20,7 @@ import UserPayments from "../pages/dashboard/user/UserPayments";
 import UserReiews from "../pages/dashboard/user/UserReiews";
 import UserProfile from "../pages/dashboard/user/UserProfile";
 import AdminDMain from "../pages/dashboard/admin/AdminDMain";
+import AddProduct from "../pages/dashboard/admin/AddProduct";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -59,10 +60,10 @@ const route = createBrowserRouter(
           }
         />
         <Route
-          path="add-new-post"
+          path="add-product"
           element={
             <PrivateRoute role="admin">
-              <h1>Add post</h1>
+              <AddProduct />
             </PrivateRoute>
           }
         />
