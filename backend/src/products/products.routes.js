@@ -2,11 +2,13 @@ import express from "express";
 import { createProduct, deleteProduct, getAllProducts, getSingleProduct, relatedProducts, updateProduct } from "../controllers/productController.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { isAdmin } from "../middleware/admin.middleware.js";
+import  upload  from "../middleware/upload.js";
+
 
 const router = express.Router();
 
 // post a product
-router.post("/create-product", verifyToken, isAdmin, createProduct)
+router.post("/create-product", verifyToken, isAdmin, upload.array("images", 3), createProduct)
 
 // get all products
 router.get("/", getAllProducts)

@@ -5,6 +5,8 @@ import asyncHandler from "../middleware/asyncHandler.js"
 import Review from "../reviews/reviews.model.js"
 
 // create a product
+import imageUpload from "../utils/uploadImage.js";
+
 const createProduct = asyncHandler(async (req, res) => {
   const {
     name,
@@ -16,24 +18,33 @@ const createProduct = asyncHandler(async (req, res) => {
     oldPrice,
     sizes,
     colors,
-    images,
   } = req.body;
 
-  // ✅ Improved validation
+  // ✅ upload images to cloudinary
+  const imageUrls = [];
+
+  if (!req.files || req.files.length === 0) {
+    throw new ApiError(400, "Images are required");
+  }
+
+  for (const file of req.files) {
+    const url = await imageUpload(file.path);
+    imageUrls.push(url);
+  }
+
+  // ✅ validation
   if (
     !name ||
     !description ||
     !brand ||
     !category ||
     !type ||
-    price === undefined ||
-    !images ||
-    images.length === 0
+    price === undefined
   ) {
     throw new ApiError(400, "All required fields must be provided");
   }
 
-  // ✅ Create product
+  // ✅ create product
   const product = new Product({
     name,
     description,
@@ -44,25 +55,28 @@ const createProduct = asyncHandler(async (req, res) => {
     oldPrice,
     sizes,
     colors,
-    images,
+    images: imageUrls, // 🔥 use cloudinary URLs
   });
 
+  console.log(product)
+
   const savedProduct = await product.save();
-  // calculate review
+
+  // ✅ rating calculation (your existing logic)
   const review = await Review.find({ productId: savedProduct._id });
-  if(review.length > 0){
+
+  if (review.length > 0) {
     const totalRating = review.reduce((acc, curr) => acc + curr.rating, 0);
     const averageRating = totalRating / review.length;
     savedProduct.rating = averageRating;
     await savedProduct.save();
   }
 
-
-  // ✅ Response
   return res.status(201).json(
     new ApiResponse(201, savedProduct, "Product created successfully")
   );
 });
+
 
 // get all products
 const getAllProducts = asyncHandler(async (req, res) => {

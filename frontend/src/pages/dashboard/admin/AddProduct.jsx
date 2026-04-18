@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useCreateProductMutation } from "../../../redux/features/products/productApi";
 
 const categories = [
   { label: "Select Category", value: "" },
@@ -19,7 +19,7 @@ const types = [
 ];
 
 const AddProduct = () => {
-  const { user } = useSelector((state) => state.auth);
+  const [createProduct, { isLoading }] = useCreateProductMutation();
 
   const [product, setProduct] = useState({
     name: "",
@@ -33,170 +33,163 @@ const AddProduct = () => {
   });
 
   const [images, setImages] = useState([]);
-
-  // input states for sizes & colors
   const [sizeInput, setSizeInput] = useState("");
   const [colorInput, setColorInput] = useState("");
 
-  // handle normal fields
+  useEffect(() => {
+    return () => {
+      images.forEach((img) => URL.revokeObjectURL(img));
+    };
+  }, [images]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // add size
   const addSize = () => {
     if (sizeInput.trim() && !product.sizes.includes(sizeInput)) {
-      setProduct({
-        ...product,
-        sizes: [...product.sizes, sizeInput],
-      });
+      setProduct((prev) => ({ ...prev, sizes: [...prev.sizes, sizeInput] }));
       setSizeInput("");
     }
   };
 
-  // remove size
   const removeSize = (size) => {
-    setProduct({
-      ...product,
-      sizes: product.sizes.filter((s) => s !== size),
-    });
+    setProduct((prev) => ({ ...prev, sizes: prev.sizes.filter((s) => s !== size) }));
   };
 
-  // add color
   const addColor = () => {
     if (colorInput.trim() && !product.colors.includes(colorInput)) {
-      setProduct({
-        ...product,
-        colors: [...product.colors, colorInput],
-      });
+      setProduct((prev) => ({ ...prev, colors: [...prev.colors, colorInput] }));
       setColorInput("");
     }
   };
 
-  // remove color
   const removeColor = (color) => {
-    setProduct({
-      ...product,
-      colors: product.colors.filter((c) => c !== color),
-    });
+    setProduct((prev) => ({ ...prev, colors: prev.colors.filter((c) => c !== color) }));
   };
 
-  // submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Product Data:", product);
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + images.length > 3) {
+      alert("Max 3 images allowed");
+      return;
+    }
+    setImages((prev) => [...prev, ...files]);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!product.name || !product.price || !product.category) {
+      alert("Please fill required fields");
+      return;
+    }
+    try {
+      const formData = new FormData();
+      Object.keys(product).forEach((key) => {
+        if (Array.isArray(product[key])) {
+          product[key].forEach((item) => formData.append(key, item));
+        } else {
+          formData.append(key, product[key]);
+        }
+      });
+      images.forEach((img) => formData.append("images", img));
+      const res = await createProduct(formData).unwrap();
+      console.log("Success:", res);
+      setProduct({ name: "", description: "", brand: "", category: "", type: "", price: "", sizes: [], colors: [] });
+      setImages([]);
+      setSizeInput("");
+      setColorInput("");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to add product");
+    }
+  };
+
+  const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 bg-white";
+  const labelClass = "text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1.5 block";
 
   return (
-    <div>
-        <div>
+  <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    
+    <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
 
-      <h2>Add New Product</h2>
-      <hr />
-        </div>
-        <div>
-            <h3>Product Details</h3>
-             <form onSubmit={handleSubmit}>
+      {/* Header */}
+      <div className="mb-6 text-center">
+        <h2 className="text-3xl font-bold text-gray-900">Add New Product</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Fill in the details to create a product
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+
         {/* Name */}
         <div>
-          <label>Product Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter product name"
-            value={product.name}
-            onChange={handleChange}
-          />
+          <label className={labelClass}>Product Name</label>
+          <input type="text" name="name" value={product.name} onChange={handleChange} className={inputClass} />
         </div>
 
         {/* Description */}
         <div>
-          <label>Description</label>
-          <textarea
-            name="description"
-            placeholder="Enter description"
-            value={product.description}
-            onChange={handleChange}
-          />
+          <label className={labelClass}>Description</label>
+          <textarea name="description" value={product.description} onChange={handleChange} className={`${inputClass} h-24 resize-none`} />
         </div>
 
         {/* Brand */}
         <div>
-          <label>Brand</label>
-          <input
-            type="text"
-            name="brand"
-            placeholder="Enter brand"
-            value={product.brand}
-            onChange={handleChange}
-          />
+          <label className={labelClass}>Brand</label>
+          <input type="text" name="brand" value={product.brand} onChange={handleChange} className={inputClass} />
         </div>
 
-        {/* Category */}
-        <div>
-          <label>Category</label>
-          <select
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-          >
-            {categories.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Category + Type */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>Category</label>
+            <select name="category" value={product.category} onChange={handleChange} className={inputClass}>
+              {categories.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+          </div>
 
-        {/* Type */}
-        <div>
-          <label>Type</label>
-          <select
-            name="type"
-            value={product.type}
-            onChange={handleChange}
-          >
-            {types.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label className={labelClass}>Type</label>
+            <select name="type" value={product.type} onChange={handleChange} className={inputClass}>
+              {types.map((t) => (
+                <option key={t.value} value={t.value}>{t.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Price */}
         <div>
-          <label>Price</label>
-          <input
-            type="number"
-            name="price"
-            placeholder="Enter price"
-            value={product.price}
-            onChange={handleChange}
-          />
+          <label className={labelClass}>Price</label>
+          <input type="number" name="price" value={product.price} onChange={handleChange} className={inputClass} />
         </div>
 
         {/* Sizes */}
         <div>
-          <label>Sizes</label>
-          <input
-            type="text"
-            placeholder="e.g. S, M, L"
-            value={sizeInput}
-            onChange={(e) => setSizeInput(e.target.value)}
-          />
-          <button type="button" onClick={addSize}>
-            Add
-          </button>
+          <label className={labelClass}>Sizes</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={sizeInput}
+              onChange={(e) => setSizeInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSize())}
+              className={`${inputClass} flex-1`}
+            />
+            <button type="button" onClick={addSize} className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800">
+              Add
+            </button>
+          </div>
 
-          <div>
-            {product.sizes.map((size, index) => (
-              <span key={index} style={{ marginRight: "10px" }}>
-                {size}
-                <button type="button" onClick={() => removeSize(size)}>
-                  x
-                </button>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {product.sizes.map((s, i) => (
+              <span key={i} className="px-3 py-1 bg-gray-100 text-sm rounded-full flex items-center gap-2">
+                {s}
+                <button onClick={() => removeSize(s)}>✕</button>
               </span>
             ))}
           </div>
@@ -204,66 +197,66 @@ const AddProduct = () => {
 
         {/* Colors */}
         <div>
-          <label>Colors</label>
-          <input
-            type="text"
-            placeholder="e.g. Red, Blue"
-            value={colorInput}
-            onChange={(e) => setColorInput(e.target.value)}
-          />
-          <button type="button" onClick={addColor}>
-            Add
-          </button>
+          <label className={labelClass}>Colors</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={colorInput}
+              onChange={(e) => setColorInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addColor())}
+              className={`${inputClass} flex-1`}
+            />
+            <button type="button" onClick={addColor} className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800">
+              Add
+            </button>
+          </div>
 
-          <div>
-            {product.colors.map((color, index) => (
-              <span key={index} style={{ marginRight: "10px" }}>
-                {color}
-                <button type="button" onClick={() => removeColor(color)}>
-                  x
-                </button>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {product.colors.map((c, i) => (
+              <span key={i} className="px-3 py-1 bg-gray-100 text-sm rounded-full flex items-center gap-2">
+                {c}
+                <button onClick={() => removeColor(c)}>✕</button>
               </span>
             ))}
           </div>
         </div>
 
+        {/* Images */}
         <div>
-            <label htmlFor="images">Images</label>
-            <input
-              type="file"
-              id="images"
-            />
+          <label className={labelClass}>Images</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImages}
+            className="w-full text-sm file:bg-black file:text-white file:px-4 file:py-2 file:rounded-lg file:border-0 hover:file:bg-gray-800"
+          />
 
+          <div className="flex gap-3 mt-3">
+            {images.map((img, i) => (
+              <img
+                key={i}
+                src={URL.createObjectURL(img)}
+                className="w-20 h-20 object-cover rounded-lg border"
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Buttons */}
-        <div>
-          <button
-            type="button"
-            onClick={() =>
-              setProduct({
-                name: "",
-                description: "",
-                brand: "",
-                category: "",
-                type: "",
-                price: "",
-                sizes: [],
-                colors: [],
-              })
-            }
-          >
-            Clear
-          </button>
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition"
+        >
+          {isLoading ? "Adding..." : "Add Product"}
+        </button>
 
-          <button type="submit">Add Product</button>
-        </div>
       </form>
-        </div>
-
-     
     </div>
-  );
+  </div>
+);
+
 };
 
 export default AddProduct;
