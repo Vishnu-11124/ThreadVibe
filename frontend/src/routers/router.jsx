@@ -21,6 +21,7 @@ import UserReiews from "../pages/dashboard/user/UserReiews";
 import UserProfile from "../pages/dashboard/user/UserProfile";
 import AdminDMain from "../pages/dashboard/admin/AdminDMain";
 import AddProduct from "../pages/dashboard/admin/AddProduct";
+import ManageProduct from "../pages/dashboard/admin/ManageProduct";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -71,7 +72,7 @@ const route = createBrowserRouter(
           path="manage-products"
           element={
             <PrivateRoute role="admin">
-              <h1>Manage products</h1>
+              <ManageProduct />
             </PrivateRoute>
           }
         />
