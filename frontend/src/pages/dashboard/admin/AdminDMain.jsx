@@ -29,7 +29,7 @@ const AdminDMain = () => {
             </div>
 
             {/* Admin Chart */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-2xl">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 w-8/9">
               <AdminStatsChart stats={stats} />
             </div>
         </div>
