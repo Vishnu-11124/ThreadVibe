@@ -163,31 +163,52 @@ const getSingleProduct = asyncHandler(async (req, res) => {
 
 // update product
 const updateProduct = asyncHandler(async (req, res) => {
-  
   const { id } = req.params;
 
-  // ✅ Check if product exists
   const existingProduct = await Product.findById(id);
 
   if (!existingProduct) {
     throw new ApiError(404, "Product not found");
   }
 
-  // ✅ Update product
+  let updateData = { ...req.body };
+
+  // ✅ FIX 1: Parse arrays if coming as string
+  if (req.body.sizes) {
+    updateData.sizes = JSON.parse(req.body.sizes);
+  }
+
+  if (req.body.colors) {
+    updateData.colors = JSON.parse(req.body.colors);
+  }
+
+  // ✅ FIX 2: Handle image upload (Cloudinary)
+  if (req.files && req.files.length > 0) {
+    const imageUrls = [];
+
+    for (const file of req.files) {
+      const url = await imageUpload(file.path);
+      imageUrls.push(url);
+    }
+
+    updateData.images = imageUrls; // replace images
+  }
+
+  // ✅ FIX 3: Update product properly
   const updatedProduct = await Product.findByIdAndUpdate(
     id,
-    { $set: req.body },
+    { $set: updateData },
     {
-      new: true, // return updated document
-      runValidators: true, // apply schema validation
-    },
+      new: true,
+      runValidators: true,
+    }
   );
 
-  // ✅ Response
-  return res
-    .status(200)
-    .json(new ApiResponse(200, updatedProduct, "Product updated successfully"));
+  return res.status(200).json(
+    new ApiResponse(200, updatedProduct, "Product updated successfully")
+  );
 });
+
 
 // delete product
 const deleteProduct = asyncHandler(async (req, res) => {

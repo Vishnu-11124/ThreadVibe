@@ -17,7 +17,14 @@ router.get("/", getAllProducts)
 router.get('/:id', getSingleProduct)
 
 // update product
-router.patch("/update-product/:id", verifyToken, isAdmin, updateProduct)
+router.patch(
+  "/update-product/:id",
+  verifyToken,
+  isAdmin,
+  upload.array("images",3), // 🔥 REQUIRED
+  updateProduct
+);
+
 
 // deleteProduct
 router.delete("/:id", verifyToken, isAdmin, deleteProduct)
