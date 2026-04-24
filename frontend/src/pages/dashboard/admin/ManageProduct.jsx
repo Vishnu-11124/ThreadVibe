@@ -71,7 +71,7 @@ const ManageProduct = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-3xl font-bold text-gray-800">
           Product Management
         </h2>
       </div>

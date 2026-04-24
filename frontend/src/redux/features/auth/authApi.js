@@ -39,14 +39,14 @@ const authApi = createApi({
     }),
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/users/:${id}`,
-        method: "POST" 
+        url: `/users/${id}`,
+        method: "DELETE" 
       }),
       invalidatesTags: ["user"],
     }),
     updateUserRole: builder.mutation({
       query: ({id, role}) => ({
-        url: `/users/:${id}`,
+        url: `/users/${id}`,
         method: "PUT" ,
         body: {role}
       }),
