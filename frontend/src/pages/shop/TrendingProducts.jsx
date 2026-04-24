@@ -1,17 +1,38 @@
-import React, { useState } from 'react'
-import ProductCards from './ProductCards'
-import products from '../../data/products'
+import React, { useState } from "react";
+import ProductCards from "./ProductCards";
+import { useGetAllProductsQuery } from "../../redux/features/products/productApi";
 
 const TrendingProducts = () => {
-  const [visibleProducts, setVisibleProducts] = useState(8)
+  const [visibleProducts, setVisibleProducts] = useState(8);
 
   const loadMoreProducts = () => {
-    setVisibleProducts(visibleProducts + 4)
-  }
+    setVisibleProducts(visibleProducts + 4);
+  };
+
+  const currentPage = 1;
+
+  const [filtersState, setFiltersState] = useState({
+    category: "all",
+    type: "all",
+    priceRange: "",
+  });
+
+  const { category, type, priceRange } = filtersState;
+  let minPrice = "";
+  let maxPrice = "";
+
+  const { data, error, isLoading } = useGetAllProductsQuery({
+    category,
+    type,
+    minPrice,
+    maxPrice,
+    page: currentPage,
+    limit: visibleProducts,
+  });
+  const products = data?.data?.products || [];
 
   return (
     <section className="py-14 max-w-7xl mx-auto px-4">
-      
       {/* Heading */}
       <div className="text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold">Trending Products</h2>
@@ -36,9 +57,8 @@ const TrendingProducts = () => {
           </button>
         </div>
       )}
-
     </section>
-  )
-}
+  );
+};
 
-export default TrendingProducts
+export default TrendingProducts;
