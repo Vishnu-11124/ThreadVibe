@@ -22,9 +22,36 @@ const orderApi = createApi({
       }),
       providesTags: ["Orders"],
     }),
-
+    getAllOrders: builder.query({
+      query: () => ({
+        url: "/all-orders",
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
+    updateOrderStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/update-status/${id}`,
+        method: "PATCH",
+        body: { orderStatus: status },
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+    deleteOrder: builder.mutation({
+      query: (id) => ({
+        url: `/delete-order/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Orders"],
+    }),
   }),
 });
 
-export const { useGetOrdersByUserIdQuery, useGetOrderByIdQuery } = orderApi;
+export const {
+  useGetOrdersByUserIdQuery,
+  useGetOrderByIdQuery,
+  useGetAllOrdersQuery,
+  useUpdateOrderStatusMutation,
+  useDeleteOrderMutation,
+} = orderApi;
 export default orderApi;

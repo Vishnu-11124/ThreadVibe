@@ -193,10 +193,10 @@ const getAllOrders = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 });
 
   res.status(200).json(
-    new ApiResponse(true, "Orders fetched successfully", {
+    new ApiResponse(true, {
       totalOrders: orders.length,
       orders
-    })
+    }, "Orders fetched successfully")
   );
 });
 
@@ -255,7 +255,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     .populate("products.productId", "name price");
 
   res.status(200).json(
-    new ApiResponse(true, "Order status updated successfully", order)
+    new ApiResponse(true,  order, "Order status updated successfully")
   );
 });
 
@@ -280,9 +280,9 @@ const deleteOrder = asyncHandler(async (req, res) => {
   await Order.findByIdAndDelete(orderId);
 
   res.status(200).json(
-    new ApiResponse(true, "Order deleted successfully", {
+    new ApiResponse(true,  {
       orderId: order._id
-    })
+    }, "Order deleted successfully")
   );
 });
 

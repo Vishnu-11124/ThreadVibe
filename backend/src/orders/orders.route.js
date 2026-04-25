@@ -19,7 +19,7 @@ router.get('/user-orders', verifyToken, getUserOrders )
 router.get('/order/:orderId', verifyToken, getOrderById )
 
 //get all orders
-router.get('/all', verifyToken, isAdmin, getAllOrders)
+router.get('/all-orders', verifyToken, isAdmin, getAllOrders)
 
 // update order status (admin only)
 router.patch('/update-status/:orderId', verifyToken, isAdmin, updateOrderStatus)

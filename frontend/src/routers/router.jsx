@@ -24,6 +24,7 @@ import AddProduct from "../pages/dashboard/admin/AddProduct";
 import ManageProduct from "../pages/dashboard/admin/ManageProduct";
 import UpdateProduct from "../pages/dashboard/admin/UpdateProduct";
 import UserManagement from "../pages/dashboard/admin/UserManagement";
+import OrderManagement from "../pages/dashboard/admin/OrderManagement";
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -98,7 +99,7 @@ const route = createBrowserRouter(
           path="manage-orders"
           element={
             <PrivateRoute role="admin">
-              <h1>Manage orders</h1>
+              <OrderManagement />
             </PrivateRoute>
           }
         />
