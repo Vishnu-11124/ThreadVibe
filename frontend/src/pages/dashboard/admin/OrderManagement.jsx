@@ -5,6 +5,7 @@ import {
 } from "../../../redux/features/orders/orderApi";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import UpdateOrder from "./UpdateOrder";
 
 const OrderManagement = () => {
   const { data, isLoading, isError } = useGetAllOrdersQuery();
@@ -174,6 +175,10 @@ const OrderManagement = () => {
           </table>
         </div>
       </div>
+
+      {
+        isMOdelOpen && <UpdateOrder order={selectedOrder} closeModel={handleCloseModel} />
+      }
     </div>
   );
 };
