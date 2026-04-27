@@ -11,7 +11,7 @@ import SingleProduct from "../pages/shop/product/SingleProduct";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import PaymentSuccess from "../components/PaymentSuccess";
-import PrivateRoute from "./privateRoute";
+import PrivateRoute from "./PrivateRoute.jsx";
 import DashboardLayout from "../pages/dashboard/Dashboard";
 import UserDMain from "../pages/dashboard/user/UserDMain";
 import UserOrders from "../pages/dashboard/user/UserOrders"
