@@ -6,6 +6,7 @@ import {
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import UpdateOrder from "./UpdateOrder";
+import ViewOrderDetails from "./ViewOrderDetails";
 
 const OrderManagement = () => {
   const { data, isLoading, isError } = useGetAllOrdersQuery();
@@ -16,6 +17,7 @@ const OrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isMOdelOpen, setIsMOdelOpen] = useState(false);
   const [deleteOrder] = useDeleteOrderMutation();
+  const [viewModelOpen, setViewModelOpen] = useState(false);
 
   const handleEditOrder = (order) => {
     setIsMOdelOpen(true);
@@ -46,6 +48,16 @@ const OrderManagement = () => {
         style: { background: "#22c55e" },
       }).showToast();
     }
+  };
+
+  const handleViewOrder = (order) => {
+    setViewModelOpen(true);
+    setSelectedOrder(order);
+  };
+
+  const handleCloseViewModel = () => {
+    setViewModelOpen(false);
+    setSelectedOrder(null);
   };
 
   if (isLoading) {
@@ -145,7 +157,10 @@ const OrderManagement = () => {
                   </td>
 
                   <td className="px-4 py-3">
-                    <button className="px-3 py-1 text-xs bg-indigo-500 text-white rounded-lg hover:bg-indigo-600">
+                    <button
+                      onClick={() => handleViewOrder(order)}
+                      className="px-3 py-1 text-xs bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+                    >
                       View
                     </button>
                   </td>
@@ -164,7 +179,16 @@ const OrderManagement = () => {
 
                     <button
                       onClick={() => handleDeleteOrder(order?._id)}
-                      className="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      disabled={
+                        order?.orderStatus === "shipped" ||
+                        order?.orderStatus === "delivered"
+                      }
+                      className={`px-3 py-1 text-xs rounded-lg transition
+    ${
+      order?.orderStatus === "shipped" || order?.orderStatus === "delivered"
+        ? "bg-red-200 text-red-300 cursor-not-allowed"
+        : "bg-red-500 text-white hover:bg-red-600"
+    }`}
                     >
                       Delete
                     </button>
@@ -176,9 +200,16 @@ const OrderManagement = () => {
         </div>
       </div>
 
-      {
-        isMOdelOpen && <UpdateOrder order={selectedOrder} closeModel={handleCloseModel} />
-      }
+      {isMOdelOpen && (
+        <UpdateOrder order={selectedOrder} closeModel={handleCloseModel} />
+      )}
+
+      {viewModelOpen && (
+        <ViewOrderDetails
+          order={selectedOrder}
+          closeModel={handleCloseViewModel}
+        />
+      )}
     </div>
   );
 };

@@ -263,28 +263,30 @@ const deleteOrder = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    console.log("Invalid ID");
     throw new ApiError(400, "Invalid Order ID");
   }
 
   const order = await Order.findById(orderId);
 
   if (!order) {
+    console.log("Order not found");
     throw new ApiError(404, "Order not found");
   }
 
-  // ❌ Restrict deletion
   if (["shipped", "delivered"].includes(order.orderStatus)) {
+    console.log("Blocked due to status");
     throw new ApiError(400, "Cannot delete shipped or delivered orders");
   }
 
   await Order.findByIdAndDelete(orderId);
 
-  res.status(200).json(
-    new ApiResponse(true,  {
-      orderId: order._id
-    }, "Order deleted successfully")
-  );
+  res.status(200).json({
+    success: true,
+    message: "Order deleted successfully",
+  });
 });
+
 
 
 export { checkoutSession, confirmPayment, getUserOrders, getOrderById, getAllOrders, updateOrderStatus, deleteOrder };
