@@ -202,7 +202,7 @@ export default function Highlight() {
           </div>
         </div>
       </section> */}
-      <CategorySection/>
+      {/* <CategorySection/> */}
       <TrendingProducts/>
 
       {/* Trust Building Section */}

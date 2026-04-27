@@ -38,8 +38,8 @@ export default function Navbar() {
   // admin dropdown
   const adminDropDownMenus = [
     { label: "Dashboard", path: "/dashboard/admin"},
-    { label: "Manage Items", path: "/dashboard/manage-products"},
-    { label: "All Orders", path: "/dashboard/manage-orders"},
+    { label: "Manage Products", path: "/dashboard/manage-products"},
+    { label: "Manage Orders", path: "/dashboard/manage-orders"},
     { label: "Add Product", path: "/dashboard/add-product"},
     { label: "Manage Users", path: "/dashboard/users"},
   ]
@@ -94,18 +94,7 @@ export default function Navbar() {
             >
               Shop
             </Link>
-            <a
-              href="/about"
-              className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
-            >
-              About
-            </a>
-            <a
-              href="/contact"
-              className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
-            >
-              Contact
-            </a>
+            
 
             {/* Cart Icon with Badge */}
             {/* <Link 
@@ -255,18 +244,7 @@ export default function Navbar() {
             >
               Shop
             </Link>
-            <a
-              href="/about"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-purple-50 hover:text-purple-600 font-medium transition-colors duration-200"
-            >
-              About
-            </a>
-            <a
-              href="/contact"
-              className="block px-3 py-2 rounded-md text-gray-700 hover:bg-purple-50 hover:text-purple-600 font-medium transition-colors duration-200"
-            >
-              Contact
-            </a>
+            
             <button
               onClick={toggleCart}
               className="relative flex items-center gap-3 px-3 py-2 w-full rounded-md bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white font-medium hover:shadow-lg transition-all duration-200"
