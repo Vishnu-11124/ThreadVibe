@@ -1,11 +1,10 @@
 services:
-  - name: my-backend-service
+  - name: backend-service
     type: web
     env: node
-    buildCommand: "npm install"
-    startCommand: "npm run dev"
-    rootDir: "./backend"
-    envVars: 
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
       - key: NODE_ENV
         value: production
-      # Add other environment variables like DB URL, etc.
