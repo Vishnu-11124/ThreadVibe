@@ -14,7 +14,7 @@ app.use(cookieParser())
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'https://thread-vibe-gamma.vercel.app/',
+    origin: process.env.CLIENT_URL,
     credentials: true
 }))
 
@@ -55,5 +55,5 @@ app.use((err, req, res, next) => {
 
 
 app.listen(port, (req, res) =>{
-    console.log(`Server is running on http://localhost:3000`);
+    console.log(`Server is running on http://localhost:${port}`);
 })
