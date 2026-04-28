@@ -72,10 +72,11 @@ const loginUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'Lax'
-    })
+  httpOnly: true,
+  secure: true,        // must be TRUE in production
+  sameSite: "none",    // must be NONE for Vercel ↔ Render
+})
+
     .json(new ApiResponse(200,{ user, token }, "User logged in successfully"));
 });
 

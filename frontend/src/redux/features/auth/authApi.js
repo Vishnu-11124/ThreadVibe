@@ -1,13 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getBaseURL } from "../../../utils/baseURL";
 
+const baseQuery = fetchBaseQuery({
+  baseUrl: `${getBaseURL()}/api/auth`,
+
+  // IMPORTANT for cookies
+  credentials: "include",
+
+  // IMPORTANT fallback for token-based auth
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      headers.set("authorization", `Bearer ${token}`);
+    }
+
+    return headers;
+  },
+});
+
 const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${getBaseURL()}/api/auth`,
-    credentials: "include",
-  }),
+  baseQuery,
   tagTypes: ["user"],
+
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -16,6 +32,7 @@ const authApi = createApi({
         body: userData,
       }),
     }),
+
     loginUser: builder.mutation({
       query: (userData) => ({
         url: "/login",
@@ -23,43 +40,59 @@ const authApi = createApi({
         body: userData,
       }),
     }),
+
     logoutUser: builder.mutation({
       query: () => ({
         url: "/logout",
-        method: "POST" 
+        method: "POST",
       }),
     }),
+
     getUser: builder.query({
       query: () => ({
         url: "/users",
         method: "GET",
       }),
-      refetchOnMount: true,
-      invalidatesTags: ["user"],
+      refetchOnMountOrArgChange: true,
+      providesTags: ["user"],
     }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/users/${id}`,
-        method: "DELETE" 
+        method: "DELETE",
       }),
       invalidatesTags: ["user"],
     }),
+
     updateUserRole: builder.mutation({
-      query: ({id, role}) => ({
+      query: ({ id, role }) => ({
         url: `/users/${id}`,
-        method: "PUT" ,
-        body: {role}
+        method: "PUT",
+        body: { role },
       }),
+      invalidatesTags: ["user"],
     }),
+
     editProfile: builder.mutation({
       query: (profileData) => ({
-        url: '/editprofile',
+        url: "/editprofile",
         method: "PATCH",
-        body: profileData
+        body: profileData,
       }),
-    })
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetUserQuery, useDeleteUserMutation, useUpdateUserRoleMutation, useEditProfileMutation } = authApi;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useGetUserQuery,
+  useDeleteUserMutation,
+  useUpdateUserRoleMutation,
+  useEditProfileMutation,
+} = authApi;
+
 export default authApi;
