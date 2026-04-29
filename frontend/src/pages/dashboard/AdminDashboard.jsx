@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { ShoppingCart, Store } from 'lucide-react'
 import { useLogoutUserMutation } from '../../redux/features/auth/authApi'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../redux/features/auth/authSlice'
 
 const navItems = [
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
   const [logoutUser] = useLogoutUserMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const cartCount = useSelector((state) => state.cart.products.length)
 
   const handleLogout = async () => {
     try {
@@ -30,22 +32,22 @@ const AdminDashboard = () => {
   return (
     <div className="flex flex-col h-full bg-white text-gray-900">
 
-      {/* ── Brand ── */}
+      {/* ── Brand — matches Navbar gradient logo ── */}
       <div className="px-2 pt-1 pb-0">
         <Link to="/" className="block">
-          <span className="text-xl font-extrabold tracking-tight text-gray-900">
-            Thread<span className="text-violet-600">Vibe</span>
+          <span className="text-2xl font-bold bg-gradient-to-r from-green-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+            ThreadVibe
           </span>
         </Link>
         <p className="flex items-center gap-2 mt-1.5 text-xs font-medium tracking-widest uppercase text-gray-400">
-          <span className="inline-block w-4 h-0.5 bg-violet-500 rounded-full" />
+          <span className="inline-block w-4 h-0.5 bg-cyan-400 rounded-full" />
           Admin Panel
         </p>
       </div>
 
       <hr className="border-gray-100 my-4" />
 
-      {/* ── Nav ── */}
+      {/* ── Dashboard nav links ── */}
       <nav className="flex-1 overflow-y-auto">
         <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
           {navItems.map((item) => (
@@ -55,7 +57,7 @@ const AdminDashboard = () => {
                 end
                 className={({ isActive }) =>
                   isActive
-                    ? 'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gray-100 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-violet-600 before:rounded-r-full'
+                    ? 'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gray-100 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-cyan-500 before:rounded-r-full'
                     : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150'
                 }
               >
@@ -67,9 +69,39 @@ const AdminDashboard = () => {
         </ul>
       </nav>
 
+      {/* ── Shop & Cart links ── */}
+      <div className="mt-2">
+        <hr className="border-gray-100 mb-3" />
+        <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
+          <li>
+            <Link
+              to="/shop"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150"
+            >
+              <Store className="w-4 h-4 shrink-0 opacity-60" />
+              <span>Shop</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/cart"
+              className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150"
+            >
+              <ShoppingCart className="w-4 h-4 shrink-0 opacity-60" />
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <span className="ml-auto flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </li>
+        </ul>
+      </div>
+
       {/* ── Logout ── */}
       <div className="pt-2">
-        <hr className="border-gray-100 mb-4" />
+        <hr className="border-gray-100 mb-4 mt-2" />
         <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 text-sm font-semibold text-white hover:bg-violet-700 transition-colors duration-200 cursor-pointer"

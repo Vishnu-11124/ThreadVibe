@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ProductCards from "../shop/ProductCards";
 import ShopFiltering from "./ShopFiltering";
 import { useGetAllProductsQuery } from "../../redux/features/products/productApi";
+import { SlidersHorizontal } from "lucide-react";
 
 const filters = {
   categories: ["all", "men", "women", "kids"],
@@ -17,6 +18,7 @@ const filters = {
 
 const ShopPage = () => {
   const [searchItem, setSearchItem] = useState("");
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   const [filtersState, setFiltersState] = useState({
     category: "all",
@@ -29,60 +31,179 @@ const ShopPage = () => {
 
   const { category, type, priceRange } = filtersState;
 
-  // ✅ Safe price parsing
   let minPrice = "";
   let maxPrice = "";
-
   if (priceRange) {
     const parts = priceRange.split("-");
     minPrice = parts[0];
     maxPrice = parts[1] === "Infinity" ? "" : parts[1];
   }
 
-  // ✅ API call
   const { data, error, isLoading } = useGetAllProductsQuery({
-    category,
-    type,
-    minPrice,
-    maxPrice,
+    category, type, minPrice, maxPrice,
     page: currentPage,
     limit: productsPerPage,
   });
 
-  // ✅ Safe data access
   const products = data?.data?.products || [];
   const totalPages = data?.data?.totalPages || 0;
-  const totalProducts = data?.data?.totalProducts || 0;
 
-  // ✅ Search filter (frontend)
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchItem.toLowerCase())
   );
 
   const clearFilters = () => {
-    setFiltersState({
-      category: "all",
-      type: "all",
-      priceRange: "",
-    });
+    setFiltersState({ category: "all", type: "all", priceRange: "" });
     setCurrentPage(1);
   };
 
-  // ✅ Loading & Error states
-  if (isLoading) {
-    return <div className="text-center py-10">Loading...</div>;
-  }
+  // Count active filters for badge
+  const activeFilterCount = [
+    filtersState.category !== "all",
+    filtersState.type !== "all",
+    filtersState.priceRange !== "",
+  ].filter(Boolean).length;
 
-  if (error) {
-    return <div className="text-center text-red-500 py-10">Error loading products</div>;
-  }
+  if (isLoading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">Error loading products</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-2 md:px-4">
-      <section className="max-w-7xl mx-auto flex gap-5">
-        
-        {/* LEFT FILTER */}
-        <div>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 md:px-6">
+      <div className="max-w-7xl mx-auto">
+
+        {/* ── Search + mobile filter button ── */}
+        <div className="bg-white shadow-md rounded-xl p-4 mb-5 flex items-center gap-3">
+
+          {/* Search input */}
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={searchItem}
+              onChange={(e) => setSearchItem(e.target.value)}
+              placeholder="Search products..."
+              className="w-full px-5 py-3 pl-11 text-base border-2 border-gray-200 rounded-xl
+                         focus:outline-none focus:border-violet-500 focus:ring-4
+                         focus:ring-violet-100 transition-all duration-300"
+            />
+            <svg
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          {/* Mobile filter button — hidden on desktop */}
+          <button
+            onClick={() => setIsFilterDrawerOpen(true)}
+            className="md:hidden relative flex items-center gap-2 px-4 py-3 bg-violet-600 text-white text-sm font-semibold rounded-xl hover:bg-violet-700 transition-colors duration-200 shrink-0"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 flex items-center justify-center text-xs font-bold bg-red-500 text-white rounded-full">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Results count */}
+        <p className="text-sm text-gray-500 mb-4 px-1">
+          Showing <span className="text-violet-600 font-semibold">{filteredProducts.length}</span> products
+        </p>
+
+        {/* ── Main layout ── */}
+        <div className="flex gap-6">
+
+          {/* LEFT FILTER — desktop only */}
+          <aside className="hidden md:block w-64 shrink-0">
+            <ShopFiltering
+              filters={filters}
+              filtersState={filtersState}
+              setFiltersState={setFiltersState}
+              clearFilters={clearFilters}
+            />
+          </aside>
+
+          {/* RIGHT PRODUCTS */}
+          <div className="flex-1 min-w-0">
+            <ProductCards products={filteredProducts} />
+
+            {/* Pagination */}
+            <div className="flex justify-center items-center mt-6 gap-3">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+                className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                ← Prev
+              </button>
+              <span className="px-4 py-2 text-sm text-gray-600">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Mobile filter drawer ── */}
+
+      {/* Backdrop */}
+      {isFilterDrawerOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsFilterDrawerOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Drawer */}
+      <div
+        className={`
+          fixed bottom-0 left-0 right-0 z-50 md:hidden
+          bg-white rounded-t-2xl shadow-2xl
+          transform transition-transform duration-300 ease-in-out
+          max-h-[85vh] overflow-y-auto
+          ${isFilterDrawerOpen ? "translate-y-0" : "translate-y-full"}
+        `}
+      >
+        {/* Drawer handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        </div>
+
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <SlidersHorizontal className="w-4 h-4 text-violet-600" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-semibold bg-violet-100 text-violet-700 rounded-full">
+                {activeFilterCount} active
+              </span>
+            )}
+          </h2>
+          <button
+            onClick={() => setIsFilterDrawerOpen(false)}
+            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Filter content */}
+        <div className="px-5 py-4">
           <ShopFiltering
             filters={filters}
             filtersState={filtersState}
@@ -91,77 +212,16 @@ const ShopPage = () => {
           />
         </div>
 
-        {/* RIGHT SECTION */}
-        <div className="w-full md:w-4/5">
-          
-          {/* SEARCH */}
-          <div className="bg-white shadow-xl rounded-xl p-5 mb-5">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchItem}
-                onChange={(e) => setSearchItem(e.target.value)}
-                placeholder="Search products..."
-                className="w-full px-5 py-3 pl-12 text-lg border-2 border-gray-200 rounded-xl 
-                           focus:outline-none focus:border-violet-500 focus:ring-4 
-                           focus:ring-violet-100 transition-all duration-300"
-              />
-
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-
-            <p className="text-gray-600 text-md mt-3">
-              Found{" "}
-              <span className="text-violet-600 font-semibold">
-                {filteredProducts.length}
-              </span>{" "}
-              products
-            </p>
-          </div>
-
-          {/* PRODUCTS */}
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Products Available: {filteredProducts.length}
-          </h3>
-
-          <ProductCards products={filteredProducts} />
-
-          {/* ✅ Pagination */}
-          <div className="flex justify-center mt-6 gap-3">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            <span className="px-4 py-2">
-              {currentPage} / {totalPages}
-            </span>
-
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+        {/* Apply button */}
+        <div className="sticky bottom-0 px-5 py-4 bg-white border-t border-gray-100">
+          <button
+            onClick={() => setIsFilterDrawerOpen(false)}
+            className="w-full py-3 bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold rounded-xl transition-colors duration-200"
+          >
+            Apply Filters
+          </button>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
