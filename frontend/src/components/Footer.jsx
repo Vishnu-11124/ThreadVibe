@@ -1,117 +1,106 @@
-import React from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Store } from 'lucide-react'
-import { useLogoutUserMutation } from '../../redux/features/auth/authApi'
-import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../../redux/features/auth/authSlice'
+import React from "react";
+import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
 
-const navItems = [
-  { path: '/dashboard',          label: 'Dashboard', icon: '▦' },
-  { path: '/dashboard/orders',   label: 'Orders',    icon: '⊟' },
-  { path: '/dashboard/payments', label: 'Payments',  icon: '◈' },
-  { path: '/dashboard/profile',  label: 'Profile',   icon: '⊕' },
-  { path: '/dashboard/reviews',  label: 'Reviews',   icon: '✦' },
-]
-
-const UserDashboard = () => {
-  const [logoutUser] = useLogoutUserMutation()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const cartCount = useSelector((state) => state.cart.products.length)
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser().unwrap()
-      dispatch(logout())
-      navigate('/')
-    } catch (error) {
-      console.error('Logout failed:', error)
-    }
-  }
-
+export default function Footer() {
   return (
-    <div className="flex flex-col h-full bg-white text-gray-900">
+    <footer className="bg-gray-900 text-gray-300 pt-12 pb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* ── Brand — matches Navbar gradient logo ── */}
-      <div className="px-2 pt-1 pb-0">
-        <Link to="/" className="block">
-          <span className="text-2xl font-bold bg-gradient-to-r from-green-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
-            ThreadVibe
-          </span>
-        </Link>
-        <p className="flex items-center gap-2 mt-1.5 text-xs font-medium tracking-widest uppercase text-gray-400">
-          <span className="inline-block w-4 h-0.5 bg-cyan-400 rounded-full" />
-          User Dashboard
-        </p>
+        {/* Top Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          {/* Brand */}
+          <div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-green-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+              ThreadVibe
+            </h2>
+            <p className="mt-3 text-sm text-gray-400 leading-relaxed">
+              Premium t-shirts for Men, Women & Kids.
+              Quality, Comfort & Style — delivered to your door.
+            </p>
+
+            {/* Social Icons */}
+            <div className="flex items-center gap-3 mt-5">
+              {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-800 hover:bg-cyan-500 hover:text-white transition-colors duration-200"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-base font-semibold text-white mb-4">Quick Links</h3>
+            <ul className="space-y-2.5 text-sm">
+              {[
+                { label: "Home", href: "/" },
+                { label: "Shop", href: "/shop" },
+                { label: "About", href: "/about" },
+                { label: "Contact", href: "/contact" },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <a href={href} className="hover:text-white transition-colors duration-150">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Customer Info */}
+          <div>
+            <h3 className="text-base font-semibold text-white mb-4">Customer Info</h3>
+            <ul className="space-y-2.5 text-sm">
+              {["Privacy Policy", "Terms & Conditions", "Shipping Policy", "Refund Policy"].map((label) => (
+                <li key={label}>
+                  <a href="#" className="hover:text-white transition-colors duration-150">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-base font-semibold text-white mb-4">Contact Us</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                <span>Kannur, Kerala, India</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
+                <a href="tel:+919876543210" className="hover:text-white transition-colors duration-150">
+                  +91 98765 43210
+                </a>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
+                <a href="mailto:support@threadvibe.com" className="hover:text-white transition-colors duration-150 break-all">
+                  support@threadvibe.com
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom */}
+        <div className="border-t border-gray-700 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-gray-400">
+          <p>
+            © {new Date().getFullYear()}{" "}
+            <span className="text-white font-semibold">ThreadVibe</span>. All rights reserved.
+          </p>
+          <p className="text-xs text-gray-600">Made with ♥ in Kerala</p>
+        </div>
+
       </div>
-
-      <hr className="border-gray-100 my-4" />
-
-      {/* ── Dashboard nav links ── */}
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
-          {navItems.map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={item.path}
-                end
-                className={({ isActive }) =>
-                  isActive
-                    ? 'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gray-100 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-cyan-500 before:rounded-r-full'
-                    : 'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150'
-                }
-              >
-                <span className="w-5 text-center text-sm shrink-0 opacity-60">{item.icon}</span>
-                <span>{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* ── Shop & Cart links ── */}
-      <div className="mt-2">
-        <hr className="border-gray-100 mb-3" />
-        <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
-          <li>
-            <Link
-              to="/shop"
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150"
-            >
-              <Store className="w-4 h-4 shrink-0 opacity-60" />
-              <span>Shop</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/cart"
-              className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-150"
-            >
-              <ShoppingCart className="w-4 h-4 shrink-0 opacity-60" />
-              <span>Cart</span>
-              {cartCount > 0 && (
-                <span className="ml-auto flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </li>
-        </ul>
-      </div>
-
-      {/* ── Logout ── */}
-      <div className="pt-2">
-        <hr className="border-gray-100 mb-4 mt-2" />
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 text-sm font-semibold text-white hover:bg-violet-700 transition-colors duration-200 cursor-pointer"
-        >
-          <span className="text-base leading-none">⏻</span>
-          <span>Logout</span>
-        </button>
-      </div>
-    </div>
-  )
+    </footer>
+  );
 }
-
-export default UserDashboard
