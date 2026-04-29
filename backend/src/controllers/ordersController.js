@@ -56,10 +56,9 @@ const checkoutSession = asyncHandler(async (req, res) => {
       products: JSON.stringify(products),
     },
 
-    success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:5173/shop`,
-
-
+    // ✅ FIXED URLs
+    success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.CLIENT_URL}/shop`,
   });
 
   res.status(200).json(
